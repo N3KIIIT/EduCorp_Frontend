@@ -1,0 +1,191 @@
+{
+  "i18n": {
+    "header": "Application supports i18n",
+    "footer": "You can select a different language from the dropdown menu."
+  },
+  "auth": {
+    "error": {
+      "title": "Authentication Error",
+      "network": "Please check your internet connection",
+      "failed": "Failed to authenticate via Telegram",
+      "refreshFailed": "Session expired, please log in again"
+    },
+    "retry": "Try Again",
+    "guard": {
+      "accessDenied": {
+        "title": "Access Denied",
+        "message": "You do not have sufficient permissions to view this page"
+      }
+    }
+  },
+  "errors": {
+    "authRequired": "Authentication required",
+    "accessDenied": "Access denied",
+    "notFound": "{resource} not found",
+    "network": "Network error",
+    "server": "Server error"
+  },
+  "search": {
+    "title": "Search Users",
+    "placeholder": "Enter name or surname",
+    "notFound": "No users found"
+  },
+  "profile": {
+    "title": "Profile",
+    "actions": "Actions",
+    "edit": {
+      "button": "Edit Profile",
+      "title": "Edit Profile",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "save": "Save"
+    },
+    "settings": {
+      "button": "Profile Settings",
+      "title": "Profile Settings",
+      "privacy": "Privacy",
+      "publicProfile": "Public Profile",
+      "showActivity": "Show Activity",
+      "notifications": "Notifications",
+      "pushNotifications": "Push Notifications",
+      "appearance": {
+        "title": "Appearance",
+        "theme": {
+          "title": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
+        "language": {
+          "title": "Language",
+          "en": "English",
+          "ru": "Russian"
+        }
+      }
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "search": "Search",
+    "profile": "Profile"
+  },
+  "user": {
+    "card": {
+      "list": {
+        "empty": "Try changing search parameters",
+        "found": "Users found: "
+      },
+      "status": {
+        "label": "Status: ",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "created": {
+        "label": "Created: "
+      }
+    },
+    "edit": {
+      "button": "Edit Profile",
+      "title": "Edit Profile",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "save": "Save",
+      "validate": {
+        "required": "First name is required",
+        "minLength": "First name must be at least 2 characters",
+        "maxLength": "First name cannot be longer than 50 characters",
+        "surnameMaxLength": "Last name cannot be longer than 50 characters",
+        "check": "Please check your input"
+      },
+      "errors": {
+        "authRequired": "Authentication required",
+        "accessDenied": "Insufficient permissions to edit profile",
+        "serverUnavailable": "Server temporarily unavailable",
+        "updateFailed": "Failed to update profile",
+        "emptyResponse": "Empty response from server"
+      },
+      "success": "Profile updated successfully"
+    }
+  },
+  "home": {
+    "title": "Home"
+  },
+  "common": {
+    "loading": "Loading"
+  },
+  "admin": {
+    "tenants": {
+      "title": "Tenant Management",
+      "add": "Add",
+      "empty": "No tenants yet",
+      "modal": {
+        "title": "New Tenant",
+        "name": "Name",
+        "namePlaceholder": "Enter name",
+        "subdomain": "Subdomain",
+        "subdomainPlaceholder": "your-subdomain",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "details": {
+        "title": "Tenant Details",
+        "users": "Users",
+        "settings": "Settings",
+        "inviteLinks": "Invite Links"
+      },
+      "users": {
+        "title": "Tenant Users",
+        "currentRole": "Current Roles",
+        "changeRole": "Assign Role",
+        "addRole": "Add Role",
+        "revoke": "Revoke",
+         
+        "roles": {
+          "User": "User",
+          "Admin": "Admin",
+          "SuperAdmin": "Super Admin",
+          "Manager": "Manager",
+          "Viewer": "Viewer"
+        }
+      },
+      "statusValues": {
+        "Active": "Active",
+        "Inactive": "Inactive"
+      },
+      "settings": {
+        "title": "Tenant Settings",
+        "name": "Name",
+        "subdomain": "Subdomain",
+        "status": "Status",
+        "save": "Save"
+      },
+      "inviteLinks": {
+        "filterAll": "All",
+        "statusActive": "Active",
+        "statusExhausted": "Exhausted",
+        "statusRevoked": "Revoked",
+        "create": "Create",
+        "empty": "No invite links yet",
+        "columnLink": "Invite Link",
+        "columnUsage": "Usage",
+        "columnStatus": "Status",
+        "prev": "Previous",
+        "next": "Next",
+        "createTitle": "New Invite Link",
+        "expiresIn": "Expires In",
+        "expires1h": "1 hour",
+        "expires12h": "12 hours",
+        "expires24h": "24 hours",
+        "expires3d": "3 days",
+        "expires7d": "7 days",
+        "maxUses": "Max Uses",
+        "maxUsesPlaceholder": "Unlimited",
+        "generate": "Generate Link",
+        "sortNewest": "Newest",
+        "sortOldest": "Oldest",
+        "sortUsageDesc": "Usage (High to Low)",
+        "sortUsageAsc": "Usage (Low to High)"
+      }
+    }
+  }
+}

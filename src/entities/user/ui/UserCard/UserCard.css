@@ -1,0 +1,7 @@
+.user-card {
+    transition: background-color 0.2s ease;
+}
+
+.user-card:hover {
+    background-color: var(--vkui--color_background_hover);
+}
