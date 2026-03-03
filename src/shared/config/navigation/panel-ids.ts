@@ -1,5 +1,5 @@
 
-import {VIEW_IDS, ViewId} from "@/shared/config/navigation/view-ids";
+import { VIEW_IDS, ViewId } from "@/shared/config/navigation/view-ids";
 
 
 export const HOME_PANEL_IDS = {
@@ -37,16 +37,44 @@ export type SettingsPanelId = typeof SETTINGS_PANEL_IDS[keyof typeof SETTINGS_PA
 
 export const ADMIN_PANEL_IDS = {
     MAIN: 'admin-main',
-    DETAILS: 'admin-tenant-details'
+    DETAILS: 'admin-tenant-details',
+    COURSES: 'admin-courses',
+    COURSE_DETAILS: 'admin-course-details',
+    LESSONS: 'admin-lessons',
+    LESSON_DETAILS: 'admin-lesson-details',
+    TESTS: 'admin-tests',
+    TEST_DETAILS: 'admin-test-details',
 } as const;
 export type AdminPanelId = typeof ADMIN_PANEL_IDS[keyof typeof ADMIN_PANEL_IDS];
+
+export const COURSE_PANEL_IDS = {
+    MAIN: 'course-main',
+    DETAIL: 'course-details',
+} as const;
+export type CoursePanelId = typeof COURSE_PANEL_IDS[keyof typeof COURSE_PANEL_IDS]
+
+export const LESSON_PANEL_IDS = {
+    MAIN: 'lesson-main',
+    DETAIL: 'lesson-details'
+} as const;
+export type LessonPanelId = typeof LESSON_PANEL_IDS[keyof typeof LESSON_PANEL_IDS]
+
+export const TEST_PANEL_IDS = {
+    MAIN: 'test-main',
+    DETAIL: 'test-details',
+    TAKE: 'test-take',
+} as const;
+export type TestPanelId = typeof TEST_PANEL_IDS[keyof typeof TEST_PANEL_IDS]
 
 export type PanelId =
     | HomePanelId
     | SearchPanelId
     | ProfilePanelId
     | SettingsPanelId
-    | AdminPanelId;
+    | AdminPanelId
+    | CoursePanelId
+    | LessonPanelId
+    | TestPanelId;
 
 
 export const DEFAULT_PANELS: Record<ViewId, PanelId> = {

@@ -17,13 +17,15 @@ import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { ADMIN_PANEL_IDS } from '@/shared/config/navigation';
 import AuthGuard from "@/entities/session/lib/auth-guard";
 import {ROLES} from "@/entities/session";
+import {useAppContextStore} from "@/shared/lib/navigation/appContextStore";
 
 export const TenantManagement: React.FC = () => {
     const t = useTranslations('admin.tenants');
     const tCommon = useTranslations('common');
     const { data: tenants = [], isLoading } = useTenants();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { goToPanel, setSelectedTenantId } = useNavigationStore();
+    const { goToPanel } = useNavigationStore();
+    const { setCurrentTenantId } = useAppContextStore();   
 
     return (
         <Group header={
@@ -51,10 +53,9 @@ export const TenantManagement: React.FC = () => {
                     <Cell 
                         key={tenant.id}
                         onClick={() => {
-                            setSelectedTenantId(tenant.id);
+                            setCurrentTenantId(tenant.id);
                             goToPanel(ADMIN_PANEL_IDS.DETAILS);
-                        }}
-                    >
+                        }}>
                         <InfoRow header={tenant.name}>
                             {tenant.subdomain}.example.com ({t(`statusValues.${tenant.status}`)})
                         </InfoRow>

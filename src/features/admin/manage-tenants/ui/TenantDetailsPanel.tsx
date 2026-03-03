@@ -9,11 +9,13 @@ import TenantUsersList from './TenantUsersList';
 import {TenantSettings} from './TenantSettings';
 import TenantInviteLinks from './TenantInviteLinks';
 import {TenantGeneralResponse} from '@/lib/api-client/types.gen';
+import {useAppContextStore} from "@/shared/lib/navigation/appContextStore";
 
 export const TenantDetailsPanel: React.FC<NavIdProps> = ({id}) => {
     const t = useTranslations('admin.tenants.details');
-    const {goBackPanel, selectedTenantId} = useNavigationStore();
-    const {data, isLoading} = useTenant(selectedTenantId || '');
+    const {goBackPanel} = useNavigationStore();
+    const { currentTenantId } = useAppContextStore();
+    const {data, isLoading} = useTenant(currentTenantId || '');
     const tenant = data as TenantGeneralResponse | undefined;
     const [activeTab, setActiveTab] = useState<'users' | 'settings' | 'inviteLinks'>('users');
 
@@ -45,7 +47,7 @@ export const TenantDetailsPanel: React.FC<NavIdProps> = ({id}) => {
                 {tenant.tenantName}
             </PanelHeader>
 
-            <Tabs mode="secondary" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Tabs mode="secondary" layoutFillMode="stretched" >
                 <TabsItem
                     selected={activeTab === 'users'}
                     onClick={() => setActiveTab('users')}

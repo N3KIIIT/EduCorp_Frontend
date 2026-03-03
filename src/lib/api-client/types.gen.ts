@@ -4,6 +4,50 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:5276/' | (string & {});
 };
 
+export type AchievementResponse = {
+    achievementRuleId: string;
+    name: string;
+    unlockedAt: string;
+};
+
+export type AddContentBlockRequest = {
+    lessonId: string;
+    data: IContentBlockDataRequest;
+    orderIndex: number | string;
+};
+
+export type AddLessonRequest = {
+    courseId: string;
+    title: string;
+};
+
+export type AddQuestionRequest = {
+    testId: string;
+    data: IQuestionDataRequest;
+    points: number | string;
+    orderIndex: number | string;
+};
+
+export type AnswerResponse = {
+    questionId: string;
+    data: IAnswerData;
+    score: null | number | string;
+    createdAt: string;
+    updatedAt: null | string;
+};
+
+export const AnswerType = {
+    SINGLE_CHOICE: 'SingleChoice',
+    MULTIPLE_CHOICE: 'MultipleChoice',
+    TEXT: 'Text',
+    MATCHING: 'Matching',
+    ORDERING: 'Ordering',
+    NUMERIC: 'Numeric',
+    FILL_IN_THE_BLANK: 'FillInTheBlank'
+} as const;
+
+export type AnswerType = typeof AnswerType[keyof typeof AnswerType];
+
 export type AssignPermissionRequest = {
     roleId: string;
     permissionResource: string;
@@ -14,6 +58,35 @@ export type AssignRoleRequest = {
     role: string;
 };
 
+export type AttemptBriefResponse = {
+    id: string;
+    testId: string;
+    userId: string;
+    startedAt: string;
+    finishedAt: null | string;
+    status: string;
+    score: null | number | string;
+    passed: null | boolean;
+    timeSpent: null | string;
+};
+
+export type AttemptResponse = {
+    id: string;
+    testId: string;
+    userId: string;
+    startedAt: string;
+    finishedAt: null | string;
+    status: string;
+    score: null | number | string;
+    passed: null | boolean;
+    timeSpent: null | string;
+    answers: Array<AnswerResponse>;
+};
+
+export type AttemptResultResponse = {
+    score: number | string;
+};
+
 export type AuthenticationResponse = {
     token: string;
     refreshToken: string;
@@ -21,9 +94,111 @@ export type AuthenticationResponse = {
     user: UserResponse;
 };
 
+export type ChallengeResponse = {
+    challengeId: string;
+    name: string;
+    completedAt: null | string;
+    expiresAt: string;
+    status: string;
+};
+
+export type ChoiceOptionRequest = {
+    text: string;
+    isCorrect?: boolean;
+    feedback?: null | string;
+};
+
+export type ChoiceOptionResponse = {
+    text: string;
+    isCorrect?: boolean;
+    feedback?: null | string;
+};
+
+export type CompleteCourseCommand = {
+    courseId: string;
+};
+
+export type CompleteLessonCommand = {
+    courseId: string;
+    lessonId: string;
+};
+
+export type ConsumeTenantInviteCommand = {
+    token: string;
+    userId: string;
+};
+
+export type ContentBlockBriefResponse = {
+    id: string;
+    lessonId: string;
+    orderIndex: number | string;
+    type: string;
+};
+
+export type ContentBlockResponse = {
+    id: string;
+    lessonId: string;
+    orderIndex: number | string;
+    type: string;
+    data: IContentBlockDataResponse;
+};
+
+export type ContinueCourseCommand = {
+    courseId: string;
+};
+
+export type CourseBriefResponse = {
+    id: string;
+    title: string;
+    description: null | string;
+    status: string;
+    isPublic: boolean;
+    authorId: null | string;
+    createdAt: string;
+    publishedAt: null | string;
+    updatedAt: null | string;
+};
+
+export type CourseProgressResponse = {
+    userId: string;
+    courseId: string;
+    completedLessons: number | string;
+    totalLessons: number | string;
+    progressPercent: number | string;
+    status: string;
+    updatedAt: string;
+    lessonProgresses: Array<LessonProgressResponse>;
+};
+
+export type CourseResponse = {
+    id: string;
+    title: string;
+    description: null | string;
+    status: string;
+    isPublic: boolean;
+    authorId: null | string;
+    createdAt: string;
+    publishedAt: null | string;
+    updatedAt: null | string;
+    lessons: Array<LessonBriefResponse>;
+};
+
+export type CreateCourseRequest = {
+    title: string;
+    description: null | string;
+    isPublic: boolean;
+};
+
 export type CreateTenantRequest = {
     name: string;
     subdomain: string;
+};
+
+export type CreateTestRequest = {
+    type: TestType;
+    courseId: null | string;
+    durationInMinutes: null | number | string;
+    passingScore: null | number | string;
 };
 
 export type DeactivateTenantRequest = {
@@ -36,11 +211,280 @@ export type Filter = {
     value?: unknown;
 };
 
+export type GamificationProfileResponse = {
+    userId: string;
+    points: number | string;
+    level: number | string;
+    lastActivityAt: string;
+    currentStreakDays: number | string;
+    longestStreakDays: number | string;
+    achievements: Array<AchievementResponse>;
+    activeChallenges: Array<ChallengeResponse>;
+};
+
 export type GenerateInviteRequest = {
     tenantId: string;
     expiresIn: string;
     maxUses?: number | string;
 };
+
+export type GetMediaLibraryQuery = {
+    filter: null | string;
+};
+
+export type IAnswerData = {
+    type?: AnswerType;
+};
+
+export type IAnswerDataRequest = ({
+    type?: 'SingleChoice';
+} & IAnswerDataRequestSingleChoiceAnswerRequest) | ({
+    type?: 'MultipleChoice';
+} & IAnswerDataRequestMultipleChoiceAnswerRequest) | ({
+    type?: 'Text';
+} & IAnswerDataRequestTextAnswerRequest) | ({
+    type?: 'Matching';
+} & IAnswerDataRequestMatchingAnswerRequest) | ({
+    type?: 'Ordering';
+} & IAnswerDataRequestOrderingAnswerRequest) | ({
+    type?: 'Numeric';
+} & IAnswerDataRequestNumericAnswerRequest) | ({
+    type?: 'FillInTheBlank';
+} & IAnswerDataRequestFillInTheBlankAnswerRequest);
+
+export type IAnswerDataRequestFillInTheBlankAnswerRequest = {
+    type?: 'FillInTheBlank';
+    blanks: {
+        [key: string]: string;
+    };
+};
+
+export type IAnswerDataRequestMatchingAnswerRequest = {
+    type?: 'Matching';
+    matches: {
+        [key: string]: number | string;
+    };
+};
+
+export type IAnswerDataRequestMultipleChoiceAnswerRequest = {
+    type?: 'MultipleChoice';
+    selectedOptionIndices: Array<number | string>;
+};
+
+export type IAnswerDataRequestNumericAnswerRequest = {
+    type?: 'Numeric';
+    answerValue: number | string;
+};
+
+export type IAnswerDataRequestOrderingAnswerRequest = {
+    type?: 'Ordering';
+    itemOrder: Array<number | string>;
+};
+
+export type IAnswerDataRequestSingleChoiceAnswerRequest = {
+    type?: 'SingleChoice';
+    selectedOptionIndex: number | string;
+};
+
+export type IAnswerDataRequestTextAnswerRequest = {
+    type?: 'Text';
+    answerText: string;
+};
+
+export type IContentBlockDataRequest = ({
+    type?: 'Text';
+} & IContentBlockDataRequestTextContentRequest) | ({
+    type?: 'Image';
+} & IContentBlockDataRequestImageContentRequest) | ({
+    type?: 'Video';
+} & IContentBlockDataRequestVideoContentRequest) | ({
+    type?: 'Audio';
+} & IContentBlockDataRequestAudioContentRequest) | ({
+    type?: 'Embedded';
+} & IContentBlockDataRequestEmbedContentRequest) | ({
+    type?: 'Pdf';
+} & IContentBlockDataRequestPdfContentRequest) | ({
+    type?: 'Interactive';
+} & IContentBlockDataRequestInteractiveContentRequest) | ({
+    type?: 'SectionBreak';
+} & IContentBlockDataRequestSectionBreakContentRequest);
+
+export type IContentBlockDataRequestAudioContentRequest = {
+    type?: 'Audio';
+    audioUrl: string;
+    title?: null | string;
+    durationSeconds?: null | number | string;
+    autoPlay?: boolean;
+    showTranscript?: boolean;
+    transcript?: null | string;
+};
+
+export type IContentBlockDataRequestEmbedContentRequest = {
+    type?: 'Embedded';
+    embedUrl: string;
+    title?: null | string;
+    width?: number | string;
+    height?: number | string;
+    responsive?: boolean;
+    parameters?: null | {
+        [key: string]: string;
+    };
+};
+
+export type IContentBlockDataRequestImageContentRequest = {
+    type?: 'Image';
+    imageUrl: string;
+    altText?: null | string;
+    caption?: null | string;
+    size?: ImageSize;
+    zoomable?: boolean;
+};
+
+export type IContentBlockDataRequestInteractiveContentRequest = {
+    type?: 'Interactive';
+    interactiveType: InteractiveType;
+    configuration: {
+        [key: string]: unknown;
+    };
+    requireCompletion?: boolean;
+};
+
+export type IContentBlockDataRequestPdfContentRequest = {
+    type?: 'Pdf';
+    pdfUrl: string;
+    enableDownload?: boolean;
+    enablePrint?: boolean;
+    defaultPage?: null | number | string;
+    enableAnnotations?: boolean;
+};
+
+export type IContentBlockDataRequestSectionBreakContentRequest = {
+    type?: 'SectionBreak';
+    title?: null | string;
+    description?: null | string;
+    style?: SectionStyle;
+};
+
+export type IContentBlockDataRequestTextContentRequest = {
+    type?: 'Text';
+    htmlContent: string;
+    enableComments?: boolean;
+    enableHighlights?: boolean;
+};
+
+export type IContentBlockDataRequestVideoContentRequest = {
+    type?: 'Video';
+    videoUrl: string;
+    thumbnailUrl?: null | string;
+    durationSeconds?: null | number | string;
+    autoPlay?: boolean;
+    showControls?: boolean;
+    subtitles?: null | Array<VideoSubtitleRequest>;
+    chapters?: null | Array<VideoChapterRequest>;
+};
+
+export type IContentBlockDataResponse = ({
+    type?: 'Text';
+} & IContentBlockDataResponseTextContentResponse) | ({
+    type?: 'Image';
+} & IContentBlockDataResponseImageContentResponse) | ({
+    type?: 'Video';
+} & IContentBlockDataResponseVideoContentResponse) | ({
+    type?: 'Audio';
+} & IContentBlockDataResponseAudioContentResponse) | ({
+    type?: 'Embedded';
+} & IContentBlockDataResponseEmbedContentResponse) | ({
+    type?: 'Pdf';
+} & IContentBlockDataResponsePdfContentResponse) | ({
+    type?: 'Interactive';
+} & IContentBlockDataResponseInteractiveContentResponse) | ({
+    type?: 'SectionBreak';
+} & IContentBlockDataResponseSectionBreakContentResponse);
+
+export type IContentBlockDataResponseAudioContentResponse = {
+    type?: 'Audio';
+    audioUrl: string;
+    title: null | string;
+    durationSeconds: null | number | string;
+    autoPlay: boolean;
+    showTranscript: boolean;
+    transcript: null | string;
+};
+
+export type IContentBlockDataResponseEmbedContentResponse = {
+    type?: 'Embedded';
+    embedUrl: string;
+    title: null | string;
+    width: number | string;
+    height: number | string;
+    responsive: boolean;
+    parameters: null | {
+        [key: string]: string;
+    };
+};
+
+export type IContentBlockDataResponseImageContentResponse = {
+    type?: 'Image';
+    imageUrl: string;
+    altText: null | string;
+    caption: null | string;
+    size: ImageSize;
+    zoomable: boolean;
+};
+
+export type IContentBlockDataResponseInteractiveContentResponse = {
+    type?: 'Interactive';
+    interactiveType: InteractiveType;
+    configuration: {
+        [key: string]: unknown;
+    };
+    requireCompletion: boolean;
+};
+
+export type IContentBlockDataResponsePdfContentResponse = {
+    type?: 'Pdf';
+    pdfUrl: string;
+    enableDownload: boolean;
+    enablePrint: boolean;
+    defaultPage: null | number | string;
+    enableAnnotations: boolean;
+};
+
+export type IContentBlockDataResponseSectionBreakContentResponse = {
+    type?: 'SectionBreak';
+    title: null | string;
+    description: null | string;
+    style: SectionStyle;
+};
+
+export type IContentBlockDataResponseTextContentResponse = {
+    type?: 'Text';
+    htmlContent: string;
+    enableComments: boolean;
+    enableHighlights: boolean;
+};
+
+export type IContentBlockDataResponseVideoContentResponse = {
+    type?: 'Video';
+    videoUrl: string;
+    thumbnailUrl: null | string;
+    durationSeconds: null | number | string;
+    autoPlay: boolean;
+    showControls: boolean;
+    subtitles: null | Array<VideoSubtitleResponse>;
+    chapters: null | Array<VideoChapterResponse>;
+};
+
+export const ImageSize = {
+    SMALL: 'Small',
+    MEDIUM: 'Medium',
+    LARGE: 'Large',
+    FULL_WIDTH: 'FullWidth'
+} as const;
+
+export type ImageSize = typeof ImageSize[keyof typeof ImageSize];
+
+export type InteractiveType = number;
 
 export const InviteStatus = {
     ACTIVE: 'Active',
@@ -50,17 +494,369 @@ export const InviteStatus = {
 
 export type InviteStatus = typeof InviteStatus[keyof typeof InviteStatus];
 
+export type IQuestionDataRequest = ({
+    type?: 'SingleChoice';
+} & IQuestionDataRequestSingleChoiceQuestionRequest) | ({
+    type?: 'MultipleChoice';
+} & IQuestionDataRequestMultipleChoiceQuestionRequest) | ({
+    type?: 'Text';
+} & IQuestionDataRequestTextQuestionRequest) | ({
+    type?: 'FillInTheBlank';
+} & IQuestionDataRequestFillInTheBlankQuestionRequest) | ({
+    type?: 'Matching';
+} & IQuestionDataRequestMatchingQuestionRequest) | ({
+    type?: 'Numeric';
+} & IQuestionDataRequestNumericQuestionRequest) | ({
+    type?: 'Ordering';
+} & IQuestionDataRequestOrderingQuestionRequest);
+
+export type IQuestionDataRequestFillInTheBlankQuestionRequest = {
+    type?: 'FillInTheBlank';
+    questionText: string;
+    correctAnswers: {
+        [key: string]: Array<string>;
+    };
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataRequestMatchingQuestionRequest = {
+    type?: 'Matching';
+    questionText: string;
+    leftItems: Array<MatchingItemRequest>;
+    rightItems: Array<MatchingItemRequest>;
+    correctMatches: {
+        [key: string]: number | string;
+    };
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataRequestMultipleChoiceQuestionRequest = {
+    type?: 'MultipleChoice';
+    questionText: string;
+    options: Array<ChoiceOptionRequest>;
+    correctOptionIndices: Array<number | string>;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+    minSelections?: null | number | string;
+    maxSelections?: null | number | string;
+};
+
+export type IQuestionDataRequestNumericQuestionRequest = {
+    type?: 'Numeric';
+    questionText: string;
+    correctAnswer: number | string;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+    settings?: null | NumericQuestionSettingsRequest;
+};
+
+export type IQuestionDataRequestOrderingQuestionRequest = {
+    type?: 'Ordering';
+    questionText: string;
+    items: Array<OrderingItemRequest>;
+    correctOrder: Array<number | string>;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataRequestSingleChoiceQuestionRequest = {
+    type?: 'SingleChoice';
+    questionText: string;
+    options: Array<ChoiceOptionRequest>;
+    correctOptionIndex: number | string;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataRequestTextQuestionRequest = {
+    type?: 'Text';
+    questionText: string;
+    acceptableAnswers: Array<string>;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaRequest>;
+    hint?: null | string;
+    explanation?: null | string;
+    settings?: null | TextQuestionSettingsRequest;
+};
+
+export type IQuestionDataResponse = ({
+    type?: 'SingleChoice';
+} & IQuestionDataResponseSingleChoiceQuestionResponse) | ({
+    type?: 'MultipleChoice';
+} & IQuestionDataResponseMultipleChoiceQuestionResponse) | ({
+    type?: 'Text';
+} & IQuestionDataResponseTextQuestionResponse) | ({
+    type?: 'FillInTheBlank';
+} & IQuestionDataResponseFillInTheBlankQuestionResponse) | ({
+    type?: 'Matching';
+} & IQuestionDataResponseMatchingQuestionResponse) | ({
+    type?: 'Numeric';
+} & IQuestionDataResponseNumericQuestionResponse) | ({
+    type?: 'Ordering';
+} & IQuestionDataResponseOrderingQuestionResponse);
+
+export type IQuestionDataResponseFillInTheBlankQuestionResponse = {
+    type?: 'FillInTheBlank';
+    questionText: string;
+    correctAnswers: {
+        [key: string]: Array<string>;
+    };
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataResponseMatchingQuestionResponse = {
+    type?: 'Matching';
+    questionText: string;
+    leftItems: Array<MatchingItemResponse>;
+    rightItems: Array<MatchingItemResponse>;
+    correctMatches: {
+        [key: string]: number | string;
+    };
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataResponseMultipleChoiceQuestionResponse = {
+    type?: 'MultipleChoice';
+    questionText: string;
+    options: Array<ChoiceOptionResponse>;
+    correctOptionIndices: Array<number | string>;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+    minSelections?: null | number | string;
+    maxSelections?: null | number | string;
+};
+
+export type IQuestionDataResponseNumericQuestionResponse = {
+    type?: 'Numeric';
+    questionText: string;
+    correctAnswer: null | NumericQuestionSettingsResponse;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+    settings?: null | NumericQuestionSettingsResponse;
+};
+
+export type IQuestionDataResponseOrderingQuestionResponse = {
+    type?: 'Ordering';
+    questionText: string;
+    items: Array<OrderingItemResponse>;
+    correctOrder: Array<number | string>;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataResponseSingleChoiceQuestionResponse = {
+    type?: 'SingleChoice';
+    questionText: string;
+    options: Array<ChoiceOptionResponse>;
+    correctOptionIndex: number | string;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+};
+
+export type IQuestionDataResponseTextQuestionResponse = {
+    type?: 'Text';
+    questionText: string;
+    acceptableAnswers: null | TextQuestionSettingsResponse;
+    description?: null | string;
+    tags?: null | Array<string>;
+    media?: null | Array<QuestionMediaResponse>;
+    hint?: null | string;
+    explanation?: null | string;
+    settings?: null | TextQuestionSettingsResponse;
+};
+
+export type LeaderboardEntryResponse = {
+    userId: string;
+    points: number | string;
+    level: number | string;
+    rank: number | string;
+};
+
+export type LessonBriefResponse = {
+    id: string;
+    courseId: string;
+    title: string;
+    description: null | string;
+    orderIndex: number | string;
+    lessonType: string;
+    estimatedDurationMinutes: null | number | string;
+    completionRule: string;
+    createdAt: string;
+    updatedAt: null | string;
+};
+
+export type LessonProgressResponse = {
+    lessonId: string;
+    status: string;
+    completedAt: null | string;
+};
+
+export type LessonResponse = {
+    id: string;
+    courseId: string;
+    title: string;
+    description: null | string;
+    orderIndex: number | string;
+    lessonType: LessonType;
+    estimatedDurationMinutes: null | number | string;
+    completionRule: string;
+    createdAt: string;
+    updatedAt: null | string;
+    contentBlocks: Array<ContentBlockBriefResponse>;
+};
+
+export const LessonType = {
+    TEXT: 'Text',
+    VIDEO: 'Video',
+    AUDIO: 'Audio'
+} as const;
+
+export type LessonType = typeof LessonType[keyof typeof LessonType];
+
 export type LoginByTelegramRequest = {
     initData: string;
 };
 
+export type MatchingItemRequest = {
+    text: string;
+    imageUrl?: null | string;
+};
+
+export type MatchingItemResponse = {
+    text: string;
+    imageUrl?: null | string;
+};
+
+export type NumericQuestionSettingsRequest = {
+    allowDecimal?: boolean;
+    decimalPlaces?: null | number | string;
+    minValue?: null | number | string;
+    maxValue?: null | number | string;
+    tolerance?: null | number | string;
+};
+
+export type NumericQuestionSettingsResponse = {
+    allowDecimal: boolean;
+    decimalPlaces?: null | number | string;
+    minValue?: null | number | string;
+    maxValue?: null | number | string;
+    tolerance?: null | number | string;
+};
+
 export type Operator = number;
+
+export type OrderingItemRequest = {
+    text: string;
+    imageUrl?: null | string;
+};
+
+export type OrderingItemResponse = {
+    text: string;
+    imageUrl?: null | string;
+};
 
 export type PagedRequest = {
     page?: number | string;
     pageSize?: number | string;
     filters?: null | Array<Filter>;
     sorts?: null | Array<Sort>;
+};
+
+export type PagedResponseOfAttemptBriefResponse = {
+    items?: Array<AttemptBriefResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfContentBlockBriefResponse = {
+    items?: Array<ContentBlockBriefResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfCourseBriefResponse = {
+    items?: Array<CourseBriefResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfCourseProgressResponse = {
+    items?: Array<CourseProgressResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfLeaderboardEntryResponse = {
+    items?: Array<LeaderboardEntryResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfLessonBriefResponse = {
+    items?: Array<LessonBriefResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfQuestionBriefResponse = {
+    items?: Array<QuestionBriefResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
 };
 
 export type PagedResponseOfTenantLinkResponse = {
@@ -73,6 +869,14 @@ export type PagedResponseOfTenantLinkResponse = {
 
 export type PagedResponseOfTenantResponse = {
     items?: Array<TenantResponse>;
+    page?: number | string;
+    pageSize?: number | string;
+    totalCount?: number | string;
+    hasNextPage?: boolean;
+};
+
+export type PagedResponseOfTestBriefResponse = {
+    items?: Array<TestBriefResponse>;
     page?: number | string;
     pageSize?: number | string;
     totalCount?: number | string;
@@ -94,8 +898,70 @@ export type PermissionResponse = {
     fullPermission: string;
 };
 
+export type QuestionBriefResponse = {
+    id: string;
+    testId: string;
+    question: string;
+    type: QuestionDataType;
+    points: number | string;
+    orderIndex: number | string;
+};
+
+export const QuestionDataType = {
+    SINGLE_CHOICE: 'SingleChoice',
+    MULTIPLE_CHOICE: 'MultipleChoice',
+    TEXT: 'Text',
+    MATCHING: 'Matching',
+    ORDERING: 'Ordering',
+    NUMERIC: 'Numeric',
+    FILL_IN_THE_BLANK: 'FillInTheBlank'
+} as const;
+
+export type QuestionDataType = typeof QuestionDataType[keyof typeof QuestionDataType];
+
+export type QuestionMediaRequest = {
+    type: QuestionMediaType;
+    url: string;
+    caption?: null | string;
+};
+
+export type QuestionMediaResponse = {
+    type: QuestionMediaType;
+    url: string;
+    caption?: null | string;
+};
+
+export type QuestionMediaType = number;
+
+export type QuestionResponse = {
+    id: string;
+    testId: string;
+    type: QuestionDataType;
+    data: IQuestionDataResponse;
+    points: number | string;
+    orderIndex: number | string;
+};
+
 export type RefreshTokenRequest = {
     refreshToken: string;
+};
+
+export type ReorderContentBlocksRequest = {
+    lessonId: string;
+    blockIds: Array<string>;
+};
+
+export type ReorderLessonsRequest = {
+    courseId: string;
+    lessonIds: Array<string>;
+};
+
+export type ReorderQuestionsRequest = {
+    questionIds: Array<string>;
+};
+
+export type ResetCourseProgressCommand = {
+    courseId: string;
 };
 
 export type RevokePermissionRequest = {
@@ -131,9 +997,39 @@ export type RoleUpdateRequest = {
     description: null | string;
 };
 
+export type SearchCoursesQuery = {
+    searchTerm: string;
+    pagination: PagedRequest;
+};
+
+export type SearchMediaLibraryQuery = {
+    searchTerm: string;
+};
+
+export type SearchQuestionsQuery = {
+    searchTerm: string;
+    pagination: PagedRequest;
+};
+
+export type SectionStyle = number;
+
 export type Sort = {
     field?: string;
     isDescending?: boolean;
+};
+
+export type StartAttemptRequest = {
+    testId: string;
+};
+
+export type StartCourseCommand = {
+    courseId: string;
+};
+
+export type SubmitAnswerRequest = {
+    attemptId: string;
+    questionId: string;
+    data: IAnswerDataRequest;
 };
 
 export type TelegramUserDataResponse = {
@@ -182,9 +1078,96 @@ export type TenantUserResponse = {
     roles: Array<RoleBriefResponse>;
 };
 
+export type TestBriefResponse = {
+    id: string;
+    courseId: null | string;
+    type: TestType;
+    timeLimitSeconds: null | number | string;
+    passingScore: null | number | string;
+    createdAt: string;
+    updatedAt: null | string;
+};
+
+export type TestPolicyResponse = {
+    maxAttempts: null | number | string;
+    shuffleQuestions: boolean;
+    showCorrectAnswersAfterSubmit: boolean;
+    allowPause: boolean;
+};
+
+export type TestResponse = {
+    id: string;
+    courseId: null | string;
+    type: TestType;
+    policy: TestPolicyResponse;
+    timeLimitSeconds: null | number | string;
+    passingScore: null | number | string;
+    createdAt: string;
+    updatedAt: null | string;
+    questions: Array<QuestionResponse>;
+};
+
+export const TestType = { PRACTICE: 'Practice', CONTROL: 'Control' } as const;
+
+export type TestType = typeof TestType[keyof typeof TestType];
+
+export type TextQuestionSettingsRequest = {
+    caseSensitive?: boolean;
+    trimWhitespace?: boolean;
+    allowPartialMatch?: boolean;
+    partialMatchThreshold?: number | string;
+    minLength?: null | number | string;
+    maxLength?: null | number | string;
+};
+
+export type TextQuestionSettingsResponse = {
+    caseSensitive: boolean;
+    trimWhitespace: boolean;
+    allowPartialMatch: boolean;
+    partialMatchThreshold: number | string;
+    minLength?: null | number | string;
+    maxLength?: null | number | string;
+};
+
+export type UpdateContentBlockRequest = {
+    data: null | IContentBlockDataRequest;
+    orderIndex: null | number | string;
+};
+
+export type UpdateCourseRequest = {
+    title: string;
+    description: string;
+};
+
+export type UpdateLessonOrderIndexRequest = {
+    orderIndex: number | string;
+};
+
+export type UpdateLessonRequest = {
+    title: string;
+    description: null | string;
+    lessonType: LessonType;
+    estimatedDurationMinutes: null | number | string;
+    completionRule: string;
+};
+
+export type UpdateQuestionRequest = {
+    data: null | IQuestionDataRequest;
+    points: null | number | string;
+};
+
+export type UpdateTestRequest = {
+    title: string;
+    description: string;
+};
+
 export type UpdateUserRequest = {
     firstName: string;
     lastName: null | string;
+};
+
+export type UploadMediaContentCommand = {
+    [key: string]: unknown;
 };
 
 export type UserPagedResponse = {
@@ -207,6 +1190,30 @@ export type UserResponse = {
     lastLogin: null | string;
     roles: Array<RoleBriefResponse>;
     permissions: Array<PermissionResponse>;
+};
+
+export type VideoChapterRequest = {
+    title: string;
+    startTimeSeconds: number | string;
+    endTimeSeconds: number | string;
+};
+
+export type VideoChapterResponse = {
+    title: string;
+    startTimeSeconds: number | string;
+    endTimeSeconds: number | string;
+};
+
+export type VideoSubtitleRequest = {
+    languageCode: string;
+    languageName: string;
+    subtitleUrl: string;
+};
+
+export type VideoSubtitleResponse = {
+    languageCode: string;
+    languageName: string;
+    subtitleUrl: string;
 };
 
 export type GetApiUsersByUserIdRolesData = {
@@ -628,6 +1635,27 @@ export type PostApiTenantsRevokeTenantInviteByTokenResponses = {
 
 export type PostApiTenantsRevokeTenantInviteByTokenResponse = PostApiTenantsRevokeTenantInviteByTokenResponses[keyof PostApiTenantsRevokeTenantInviteByTokenResponses];
 
+export type PostApiTenantsConsumeInviteData = {
+    body: ConsumeTenantInviteCommand;
+    path?: never;
+    query?: never;
+    url: '/api/Tenants/ConsumeInvite';
+};
+
+export type PostApiTenantsConsumeInviteErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+};
+
+export type PostApiTenantsConsumeInviteResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type GetApiRolesGetAllByTenantIdData = {
     body?: never;
     path: {
@@ -789,6 +1817,883 @@ export type PostApiRolesRevokePermissionResponses = {
 
 export type PostApiRolesRevokePermissionResponse = PostApiRolesRevokePermissionResponses[keyof PostApiRolesRevokePermissionResponses];
 
+export type GetApiRolesUserPermissionsByUserIdData = {
+    body?: never;
+    path: {
+        userId: string;
+    };
+    query?: never;
+    url: '/api/Roles/UserPermissions/{userId}';
+};
+
+export type GetApiRolesUserPermissionsByUserIdResponses = {
+    /**
+     * OK
+     */
+    200: Array<PermissionResponse>;
+};
+
+export type GetApiRolesUserPermissionsByUserIdResponse = GetApiRolesUserPermissionsByUserIdResponses[keyof GetApiRolesUserPermissionsByUserIdResponses];
+
+export type GetApiRolesUserRolesByUserIdData = {
+    body?: never;
+    path: {
+        userId: string;
+    };
+    query?: never;
+    url: '/api/Roles/UserRoles/{userId}';
+};
+
+export type GetApiRolesUserRolesByUserIdResponses = {
+    /**
+     * OK
+     */
+    200: Array<RoleResponse>;
+};
+
+export type GetApiRolesUserRolesByUserIdResponse = GetApiRolesUserRolesByUserIdResponses[keyof GetApiRolesUserRolesByUserIdResponses];
+
+export type PostApiCoursesProgressStartData = {
+    body: StartCourseCommand;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/Start';
+};
+
+export type PostApiCoursesProgressStartResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesProgressContinueData = {
+    body: ContinueCourseCommand;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/Continue';
+};
+
+export type PostApiCoursesProgressContinueResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesProgressCompleteLessonData = {
+    body: CompleteLessonCommand;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/CompleteLesson';
+};
+
+export type PostApiCoursesProgressCompleteLessonResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesProgressCompleteCourseData = {
+    body: CompleteCourseCommand;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/CompleteCourse';
+};
+
+export type PostApiCoursesProgressCompleteCourseResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesProgressResetData = {
+    body: ResetCourseProgressCommand;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/Reset';
+};
+
+export type PostApiCoursesProgressResetResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiCoursesProgressByCourseIdData = {
+    body?: never;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/CoursesProgress/{courseId}';
+};
+
+export type GetApiCoursesProgressByCourseIdResponses = {
+    /**
+     * OK
+     */
+    200: CourseProgressResponse;
+};
+
+export type GetApiCoursesProgressByCourseIdResponse = GetApiCoursesProgressByCourseIdResponses[keyof GetApiCoursesProgressByCourseIdResponses];
+
+export type GetApiCoursesProgressByCourseIdWithLessonsData = {
+    body?: never;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/CoursesProgress/{courseId}/WithLessons';
+};
+
+export type GetApiCoursesProgressByCourseIdWithLessonsResponses = {
+    /**
+     * OK
+     */
+    200: CourseProgressResponse;
+};
+
+export type GetApiCoursesProgressByCourseIdWithLessonsResponse = GetApiCoursesProgressByCourseIdWithLessonsResponses[keyof GetApiCoursesProgressByCourseIdWithLessonsResponses];
+
+export type GetApiCoursesProgressByCourseIdStatsData = {
+    body?: never;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/CoursesProgress/{courseId}/Stats';
+};
+
+export type GetApiCoursesProgressByCourseIdStatsResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesProgressUserData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/User';
+};
+
+export type PostApiCoursesProgressUserResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseProgressResponse;
+};
+
+export type PostApiCoursesProgressUserResponse = PostApiCoursesProgressUserResponses[keyof PostApiCoursesProgressUserResponses];
+
+export type GetApiCoursesProgressUserSummaryData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/CoursesProgress/User/Summary';
+};
+
+export type GetApiCoursesProgressUserSummaryResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiGamificationProfileData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/Gamification/Profile';
+};
+
+export type GetApiGamificationProfileResponses = {
+    /**
+     * OK
+     */
+    200: GamificationProfileResponse;
+};
+
+export type GetApiGamificationProfileResponse = GetApiGamificationProfileResponses[keyof GetApiGamificationProfileResponses];
+
+export type PostApiGamificationLeaderboardData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Gamification/Leaderboard';
+};
+
+export type PostApiGamificationLeaderboardResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfLeaderboardEntryResponse;
+};
+
+export type PostApiGamificationLeaderboardResponse = PostApiGamificationLeaderboardResponses[keyof PostApiGamificationLeaderboardResponses];
+
+export type PostApiContentBlocksData = {
+    body: AddContentBlockRequest;
+    path?: never;
+    query?: never;
+    url: '/api/ContentBlocks';
+};
+
+export type PostApiContentBlocksResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type DeleteApiContentBlocksByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/{id}';
+};
+
+export type DeleteApiContentBlocksByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type DeleteApiContentBlocksByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiContentBlocksByIdResponse = DeleteApiContentBlocksByIdResponses[keyof DeleteApiContentBlocksByIdResponses];
+
+export type GetApiContentBlocksByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/{id}';
+};
+
+export type GetApiContentBlocksByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiContentBlocksByIdResponses = {
+    /**
+     * OK
+     */
+    200: ContentBlockResponse;
+};
+
+export type GetApiContentBlocksByIdResponse = GetApiContentBlocksByIdResponses[keyof GetApiContentBlocksByIdResponses];
+
+export type PutApiContentBlocksByIdData = {
+    body: UpdateContentBlockRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/{id}';
+};
+
+export type PutApiContentBlocksByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PutApiContentBlocksByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiContentBlocksReorderData = {
+    body: ReorderContentBlocksRequest;
+    path?: never;
+    query?: never;
+    url: '/api/ContentBlocks/Reorder';
+};
+
+export type PostApiContentBlocksReorderResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiContentBlocksUploadMediaData = {
+    body: UploadMediaContentCommand;
+    path?: never;
+    query?: never;
+    url: '/api/ContentBlocks/UploadMedia';
+};
+
+export type PostApiContentBlocksUploadMediaResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type DeleteApiContentBlocksMediaByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/Media/{id}';
+};
+
+export type DeleteApiContentBlocksMediaByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiContentBlocksMediaByIdResponse = DeleteApiContentBlocksMediaByIdResponses[keyof DeleteApiContentBlocksMediaByIdResponses];
+
+export type PostApiContentBlocksByCourseByCourseIdData = {
+    body: PagedRequest;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/ByCourse/{courseId}';
+};
+
+export type PostApiContentBlocksByCourseByCourseIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfContentBlockBriefResponse;
+};
+
+export type PostApiContentBlocksByCourseByCourseIdResponse = PostApiContentBlocksByCourseByCourseIdResponses[keyof PostApiContentBlocksByCourseByCourseIdResponses];
+
+export type PostApiContentBlocksByLessonByLessonIdData = {
+    body: PagedRequest;
+    path: {
+        lessonId: string;
+    };
+    query?: never;
+    url: '/api/ContentBlocks/ByLesson/{lessonId}';
+};
+
+export type PostApiContentBlocksByLessonByLessonIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfContentBlockBriefResponse;
+};
+
+export type PostApiContentBlocksByLessonByLessonIdResponse = PostApiContentBlocksByLessonByLessonIdResponses[keyof PostApiContentBlocksByLessonByLessonIdResponses];
+
+export type PostApiContentBlocksMediaLibraryData = {
+    body: GetMediaLibraryQuery;
+    path?: never;
+    query?: never;
+    url: '/api/ContentBlocks/MediaLibrary';
+};
+
+export type PostApiContentBlocksMediaLibraryResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiContentBlocksMediaLibrarySearchData = {
+    body: SearchMediaLibraryQuery;
+    path?: never;
+    query?: never;
+    url: '/api/ContentBlocks/MediaLibrary/Search';
+};
+
+export type PostApiContentBlocksMediaLibrarySearchResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesData = {
+    body: CreateCourseRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Courses';
+};
+
+export type PostApiCoursesResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type DeleteApiCoursesByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}';
+};
+
+export type DeleteApiCoursesByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type DeleteApiCoursesByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiCoursesByIdResponse = DeleteApiCoursesByIdResponses[keyof DeleteApiCoursesByIdResponses];
+
+export type GetApiCoursesByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}';
+};
+
+export type GetApiCoursesByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiCoursesByIdResponses = {
+    /**
+     * OK
+     */
+    200: CourseResponse;
+};
+
+export type GetApiCoursesByIdResponse = GetApiCoursesByIdResponses[keyof GetApiCoursesByIdResponses];
+
+export type PutApiCoursesByIdData = {
+    body: UpdateCourseRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}';
+};
+
+export type PutApiCoursesByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PutApiCoursesByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiCoursesByIdWithLessonsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}/WithLessons';
+};
+
+export type GetApiCoursesByIdWithLessonsResponses = {
+    /**
+     * OK
+     */
+    200: CourseResponse;
+};
+
+export type GetApiCoursesByIdWithLessonsResponse = GetApiCoursesByIdWithLessonsResponses[keyof GetApiCoursesByIdWithLessonsResponses];
+
+export type PostApiCoursesByIdPublishData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}/Publish';
+};
+
+export type PostApiCoursesByIdPublishResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesByIdArchiveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}/Archive';
+};
+
+export type PostApiCoursesByIdArchiveResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesByIdUnpublishData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Courses/{id}/Unpublish';
+};
+
+export type PostApiCoursesByIdUnpublishResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiCoursesSearchData = {
+    body: SearchCoursesQuery;
+    path?: never;
+    query?: never;
+    url: '/api/Courses/Search';
+};
+
+export type PostApiCoursesSearchResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesSearchResponse = PostApiCoursesSearchResponses[keyof PostApiCoursesSearchResponses];
+
+export type PostApiCoursesByAuthorByAuthorIdData = {
+    body: PagedRequest;
+    path: {
+        authorId: string;
+    };
+    query?: never;
+    url: '/api/Courses/ByAuthor/{authorId}';
+};
+
+export type PostApiCoursesByAuthorByAuthorIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesByAuthorByAuthorIdResponse = PostApiCoursesByAuthorByAuthorIdResponses[keyof PostApiCoursesByAuthorByAuthorIdResponses];
+
+export type PostApiCoursesByCategoryByCategoryIdData = {
+    body: PagedRequest;
+    path: {
+        categoryId: string;
+    };
+    query?: never;
+    url: '/api/Courses/ByCategory/{categoryId}';
+};
+
+export type PostApiCoursesByCategoryByCategoryIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesByCategoryByCategoryIdResponse = PostApiCoursesByCategoryByCategoryIdResponses[keyof PostApiCoursesByCategoryByCategoryIdResponses];
+
+export type PostApiCoursesByTagByTagData = {
+    body: PagedRequest;
+    path: {
+        tag: string;
+    };
+    query?: never;
+    url: '/api/Courses/ByTag/{tag}';
+};
+
+export type PostApiCoursesByTagByTagResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesByTagByTagResponse = PostApiCoursesByTagByTagResponses[keyof PostApiCoursesByTagByTagResponses];
+
+export type PostApiCoursesByTenantData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Courses/ByTenant';
+};
+
+export type PostApiCoursesByTenantResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesByTenantResponse = PostApiCoursesByTenantResponses[keyof PostApiCoursesByTenantResponses];
+
+export type PostApiCoursesPublicData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Courses/Public';
+};
+
+export type PostApiCoursesPublicResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesPublicResponse = PostApiCoursesPublicResponses[keyof PostApiCoursesPublicResponses];
+
+export type PostApiCoursesPublishedData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Courses/Published';
+};
+
+export type PostApiCoursesPublishedResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfCourseBriefResponse;
+};
+
+export type PostApiCoursesPublishedResponse = PostApiCoursesPublishedResponses[keyof PostApiCoursesPublishedResponses];
+
+export type PostApiLessonsData = {
+    body: AddLessonRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Lessons';
+};
+
+export type PostApiLessonsResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type DeleteApiLessonsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}';
+};
+
+export type DeleteApiLessonsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type DeleteApiLessonsByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiLessonsByIdResponse = DeleteApiLessonsByIdResponses[keyof DeleteApiLessonsByIdResponses];
+
+export type GetApiLessonsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}';
+};
+
+export type GetApiLessonsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiLessonsByIdResponses = {
+    /**
+     * OK
+     */
+    200: LessonResponse;
+};
+
+export type GetApiLessonsByIdResponse = GetApiLessonsByIdResponses[keyof GetApiLessonsByIdResponses];
+
+export type PutApiLessonsByIdData = {
+    body: UpdateLessonRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}';
+};
+
+export type PutApiLessonsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PutApiLessonsByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiLessonsByIdWithContentData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}/WithContent';
+};
+
+export type GetApiLessonsByIdWithContentResponses = {
+    /**
+     * OK
+     */
+    200: LessonResponse;
+};
+
+export type GetApiLessonsByIdWithContentResponse = GetApiLessonsByIdWithContentResponses[keyof GetApiLessonsByIdWithContentResponses];
+
+export type PostApiLessonsReorderData = {
+    body: ReorderLessonsRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Lessons/Reorder';
+};
+
+export type PostApiLessonsReorderResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PatchApiLessonsByIdOrderIndexData = {
+    body: UpdateLessonOrderIndexRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}/OrderIndex';
+};
+
+export type PatchApiLessonsByIdOrderIndexResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiLessonsByCourseByCourseIdData = {
+    body: PagedRequest;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/Lessons/ByCourse/{courseId}';
+};
+
+export type PostApiLessonsByCourseByCourseIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfLessonBriefResponse;
+};
+
+export type PostApiLessonsByCourseByCourseIdResponse = PostApiLessonsByCourseByCourseIdResponses[keyof PostApiLessonsByCourseByCourseIdResponses];
+
+export type GetApiLessonsByIdNextData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}/Next';
+};
+
+export type GetApiLessonsByIdNextResponses = {
+    /**
+     * OK
+     */
+    200: LessonBriefResponse;
+};
+
+export type GetApiLessonsByIdNextResponse = GetApiLessonsByIdNextResponses[keyof GetApiLessonsByIdNextResponses];
+
+export type GetApiLessonsByIdPreviousData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Lessons/{id}/Previous';
+};
+
+export type GetApiLessonsByIdPreviousResponses = {
+    /**
+     * OK
+     */
+    200: LessonBriefResponse;
+};
+
+export type GetApiLessonsByIdPreviousResponse = GetApiLessonsByIdPreviousResponses[keyof GetApiLessonsByIdPreviousResponses];
+
 export type PostApiAuthLoginByTelegramData = {
     body: LoginByTelegramRequest;
     path?: never;
@@ -834,3 +2739,594 @@ export type PostApiAuthRefreshResponses = {
 };
 
 export type PostApiAuthRefreshResponse = PostApiAuthRefreshResponses[keyof PostApiAuthRefreshResponses];
+
+export type PostApiAttemptsStartData = {
+    body: StartAttemptRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Attempts/Start';
+};
+
+export type PostApiAttemptsStartResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByAttemptIdSubmitAnswerData = {
+    body: SubmitAnswerRequest;
+    path: {
+        attemptId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{attemptId}/SubmitAnswer';
+};
+
+export type PostApiAttemptsByAttemptIdSubmitAnswerResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByIdUpdateAnswerData = {
+    body: SubmitAnswerRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/UpdateAnswer';
+};
+
+export type PostApiAttemptsByIdUpdateAnswerResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByIdCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/Complete';
+};
+
+export type PostApiAttemptsByIdCompleteResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByIdPauseData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/Pause';
+};
+
+export type PostApiAttemptsByIdPauseResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByIdResumeData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/Resume';
+};
+
+export type PostApiAttemptsByIdResumeResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiAttemptsByIdReviewData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/Review';
+};
+
+export type PostApiAttemptsByIdReviewResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiAttemptsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}';
+};
+
+export type GetApiAttemptsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiAttemptsByIdResponses = {
+    /**
+     * OK
+     */
+    200: AttemptResponse;
+};
+
+export type GetApiAttemptsByIdResponse = GetApiAttemptsByIdResponses[keyof GetApiAttemptsByIdResponses];
+
+export type GetApiAttemptsByIdWithAnswersData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/WithAnswers';
+};
+
+export type GetApiAttemptsByIdWithAnswersResponses = {
+    /**
+     * OK
+     */
+    200: AttemptResponse;
+};
+
+export type GetApiAttemptsByIdWithAnswersResponse = GetApiAttemptsByIdWithAnswersResponses[keyof GetApiAttemptsByIdWithAnswersResponses];
+
+export type GetApiAttemptsByIdResultsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/{id}/Results';
+};
+
+export type GetApiAttemptsByIdResultsResponses = {
+    /**
+     * OK
+     */
+    200: AttemptResponse;
+};
+
+export type GetApiAttemptsByIdResultsResponse = GetApiAttemptsByIdResultsResponses[keyof GetApiAttemptsByIdResultsResponses];
+
+export type GetApiAttemptsActiveByTestIdData = {
+    body?: never;
+    path: {
+        testId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/Active/{testId}';
+};
+
+export type GetApiAttemptsActiveByTestIdResponses = {
+    /**
+     * OK
+     */
+    200: AttemptResponse;
+};
+
+export type GetApiAttemptsActiveByTestIdResponse = GetApiAttemptsActiveByTestIdResponses[keyof GetApiAttemptsActiveByTestIdResponses];
+
+export type GetApiAttemptsGetAttemptResultByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Attempts/GetAttemptResult/{id}';
+};
+
+export type GetApiAttemptsGetAttemptResultByIdResponses = {
+    /**
+     * OK
+     */
+    200: AttemptResultResponse;
+};
+
+export type GetApiAttemptsGetAttemptResultByIdResponse = GetApiAttemptsGetAttemptResultByIdResponses[keyof GetApiAttemptsGetAttemptResultByIdResponses];
+
+export type GetApiAttemptsByTestByTestIdData = {
+    body: PagedRequest;
+    path: {
+        testId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/ByTest/{testId}';
+};
+
+export type GetApiAttemptsByTestByTestIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfAttemptBriefResponse;
+};
+
+export type GetApiAttemptsByTestByTestIdResponse = GetApiAttemptsByTestByTestIdResponses[keyof GetApiAttemptsByTestByTestIdResponses];
+
+export type PostApiAttemptsByUserByUserIdData = {
+    body: PagedRequest;
+    path: {
+        userId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/ByUser/{userId}';
+};
+
+export type PostApiAttemptsByUserByUserIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfAttemptBriefResponse;
+};
+
+export type PostApiAttemptsByUserByUserIdResponse = PostApiAttemptsByUserByUserIdResponses[keyof PostApiAttemptsByUserByUserIdResponses];
+
+export type PostApiAttemptsBestByTestIdByUserIdData = {
+    body?: never;
+    path: {
+        testId: string;
+        userId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/Best/{testId}/{userId}';
+};
+
+export type PostApiAttemptsBestByTestIdByUserIdResponses = {
+    /**
+     * OK
+     */
+    200: AttemptBriefResponse;
+};
+
+export type PostApiAttemptsBestByTestIdByUserIdResponse = PostApiAttemptsBestByTestIdByUserIdResponses[keyof PostApiAttemptsBestByTestIdByUserIdResponses];
+
+export type GetApiAttemptsLastByTestIdByUserIdData = {
+    body?: never;
+    path: {
+        testId: string;
+        userId: string;
+    };
+    query?: never;
+    url: '/api/Attempts/Last/{testId}/{userId}';
+};
+
+export type GetApiAttemptsLastByTestIdByUserIdResponses = {
+    /**
+     * OK
+     */
+    200: AttemptBriefResponse;
+};
+
+export type GetApiAttemptsLastByTestIdByUserIdResponse = GetApiAttemptsLastByTestIdByUserIdResponses[keyof GetApiAttemptsLastByTestIdByUserIdResponses];
+
+export type PostApiQuestionsData = {
+    body: AddQuestionRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Questions';
+};
+
+export type PostApiQuestionsResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type DeleteApiQuestionsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Questions/{id}';
+};
+
+export type DeleteApiQuestionsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type DeleteApiQuestionsByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiQuestionsByIdResponse = DeleteApiQuestionsByIdResponses[keyof DeleteApiQuestionsByIdResponses];
+
+export type GetApiQuestionsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Questions/{id}';
+};
+
+export type GetApiQuestionsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiQuestionsByIdResponses = {
+    /**
+     * OK
+     */
+    200: QuestionResponse;
+};
+
+export type GetApiQuestionsByIdResponse = GetApiQuestionsByIdResponses[keyof GetApiQuestionsByIdResponses];
+
+export type PutApiQuestionsByIdData = {
+    body: UpdateQuestionRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Questions/{id}';
+};
+
+export type PutApiQuestionsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PutApiQuestionsByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiQuestionsReorderByTestIdData = {
+    body: ReorderQuestionsRequest;
+    path: {
+        testId: string;
+    };
+    query?: never;
+    url: '/api/Questions/Reorder/{testId}';
+};
+
+export type PostApiQuestionsReorderByTestIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiQuestionsByTestByTestIdData = {
+    body: PagedRequest;
+    path: {
+        testId: string;
+    };
+    query?: never;
+    url: '/api/Questions/ByTest/{testId}';
+};
+
+export type PostApiQuestionsByTestByTestIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfQuestionBriefResponse;
+};
+
+export type PostApiQuestionsByTestByTestIdResponse = PostApiQuestionsByTestByTestIdResponses[keyof PostApiQuestionsByTestByTestIdResponses];
+
+export type PostApiQuestionsSearchData = {
+    body: SearchQuestionsQuery;
+    path?: never;
+    query?: never;
+    url: '/api/Questions/Search';
+};
+
+export type PostApiQuestionsSearchResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfQuestionBriefResponse;
+};
+
+export type PostApiQuestionsSearchResponse = PostApiQuestionsSearchResponses[keyof PostApiQuestionsSearchResponses];
+
+export type PostApiTestsData = {
+    body: CreateTestRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Tests';
+};
+
+export type PostApiTestsResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type DeleteApiTestsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Tests/{id}';
+};
+
+export type DeleteApiTestsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type DeleteApiTestsByIdResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteApiTestsByIdResponse = DeleteApiTestsByIdResponses[keyof DeleteApiTestsByIdResponses];
+
+export type GetApiTestsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Tests/{id}';
+};
+
+export type GetApiTestsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiTestsByIdResponses = {
+    /**
+     * OK
+     */
+    200: TestResponse;
+};
+
+export type GetApiTestsByIdResponse = GetApiTestsByIdResponses[keyof GetApiTestsByIdResponses];
+
+export type PutApiTestsByIdData = {
+    body: UpdateTestRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Tests/{id}';
+};
+
+export type PutApiTestsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PutApiTestsByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetApiTestsByIdWithQuestionsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Tests/{id}/WithQuestions';
+};
+
+export type GetApiTestsByIdWithQuestionsResponses = {
+    /**
+     * OK
+     */
+    200: TestResponse;
+};
+
+export type GetApiTestsByIdWithQuestionsResponse = GetApiTestsByIdWithQuestionsResponses[keyof GetApiTestsByIdWithQuestionsResponses];
+
+export type PostApiTestsByIdArchiveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/Tests/{id}/Archive';
+};
+
+export type PostApiTestsByIdArchiveResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostApiTestsPublishedData = {
+    body: PagedRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Tests/Published';
+};
+
+export type PostApiTestsPublishedResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfTestBriefResponse;
+};
+
+export type PostApiTestsPublishedResponse = PostApiTestsPublishedResponses[keyof PostApiTestsPublishedResponses];
+
+export type PostApiTestsByCourseByCourseIdData = {
+    body: PagedRequest;
+    path: {
+        courseId: string;
+    };
+    query?: never;
+    url: '/api/Tests/ByCourse/{courseId}';
+};
+
+export type PostApiTestsByCourseByCourseIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfTestBriefResponse;
+};
+
+export type PostApiTestsByCourseByCourseIdResponse = PostApiTestsByCourseByCourseIdResponses[keyof PostApiTestsByCourseByCourseIdResponses];
+
+export type PostApiTestsByLessonByLessonIdData = {
+    body: PagedRequest;
+    path: {
+        lessonId: string;
+    };
+    query?: never;
+    url: '/api/Tests/ByLesson/{lessonId}';
+};
+
+export type PostApiTestsByLessonByLessonIdResponses = {
+    /**
+     * OK
+     */
+    200: PagedResponseOfTestBriefResponse;
+};
+
+export type PostApiTestsByLessonByLessonIdResponse = PostApiTestsByLessonByLessonIdResponses[keyof PostApiTestsByLessonByLessonIdResponses];

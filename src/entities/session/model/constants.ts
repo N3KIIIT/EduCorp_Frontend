@@ -20,6 +20,27 @@ export const PERMISSIONS = {
     USERS_DELETE: 'Users.Delete',
     USERS_MANAGE: 'Users.Manage',
 
+    COURSES_READ: 'Courses.Read',
+    COURSES_WRITE: 'Courses.Write',
+    COURSES_DELETE: 'Courses.Delete',
+    COURSES_MANAGE: 'Courses.Manage',
+
+    LESSONS_READ: 'Lessons.Read',
+    LESSONS_WRITE: 'Lessons.Write',
+    LESSONS_DELETE: 'Lessons.Delete',
+
+    CONTENT_BLOCKS_READ: 'ContentBlocks.Read',
+    CONTENT_BLOCKS_WRITE: 'ContentBlocks.Write',
+    CONTENT_BLOCKS_DELETE: 'ContentBlocks.Delete',
+
+    TESTS_READ: 'Tests.Read',
+    TESTS_WRITE: 'Tests.Write',
+    TESTS_DELETE: 'Tests.Delete',
+
+    QUESTIONS_READ: 'Questions.Read',
+    QUESTIONS_WRITE: 'Questions.Write',
+    QUESTIONS_DELETE: 'Questions.Delete',
+
 } as const;
 
 export const ROLES = {

@@ -30,6 +30,8 @@ export const ROLES = {
   ADMIN: "Admin",
   SUPER_ADMIN: "SuperAdmin",
   USER: "User",
+  MANAGER: "Manager",
+  VIEWER: "Viewer",
 } as const;
 
 export type PermissionType =

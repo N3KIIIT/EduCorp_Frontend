@@ -8,13 +8,14 @@ import {
     Button,
     Select,
     Placeholder,
-    Spinner,
+    Spinner, ModalRoot, ModalPage, ButtonGroup,
 } from '@vkontakte/vkui';
 import {Icon24Copy, Icon24Cancel} from '@vkontakte/icons';
 import {useTranslations} from 'next-intl';
 import {InviteStatus} from '@/lib/api-client/types.gen';
 import {useInfiniteInviteLinks, useRevokeInviteLink} from '../api/invite-api';
 import CreateInviteModal from './CreateInviteModal';
+import {useNavigationStore} from "@/shared/lib/navigation/store";
 
 interface TenantInviteLinksProps {
     tenantId: string;
@@ -25,11 +26,11 @@ const PAGE_SIZE = 10;
 const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
     const t = useTranslations('admin.tenants.inviteLinks');
     const [statusFilter, setStatusFilter] = useState<InviteStatus | undefined>('Active');
+    const {activeModal, openModal} = useNavigationStore();
     const [sortConfig, setSortConfig] = useState<{ field: string; isDescending: boolean }>({
         field: 'CreatedAt',
         isDescending: true,
     });
-    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const {
         data,
@@ -38,6 +39,15 @@ const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteInviteLinks(tenantId, PAGE_SIZE, statusFilter, sortConfig.field, sortConfig.isDescending);
+
+    const modalRoot = (
+        <ModalRoot activeModal={activeModal} onClose={close}>
+            <CreateInviteModal
+                tenantId={tenantId}
+                onClose={() => closeModal}
+            />
+        </ModalRoot>
+    );
 
     const revokeLink = useRevokeInviteLink(tenantId);
 
@@ -97,6 +107,7 @@ const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
 
     return (
         <Group>
+            {modalRoot}
             <Box style={{display: 'flex', gap: 8, padding: '0 16px', flexWrap: 'wrap'}}>
                 <Box style={{width: 150}}>
                     <Select
@@ -122,7 +133,7 @@ const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
                 <Button
                     size="m"
                     mode="primary"
-                    onClick={() => setShowCreateModal(true)}
+                    onClick={() => openModal("create-invite")}
                 >
                     {t('create')}
                 </Button>
@@ -217,13 +228,6 @@ const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
                         </Box>
                     )}
                 </Box>
-            )}
-
-            {showCreateModal && (
-                <CreateInviteModal
-                    tenantId={tenantId}
-                    onClose={() => setShowCreateModal(false)}
-                />
             )}
         </Group>
     );

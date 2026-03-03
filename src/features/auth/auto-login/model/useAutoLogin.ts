@@ -44,7 +44,7 @@ export const useAutoLogin = (): UseAutoLoginResult => {
         mutationFn: loginWithTelegram,
         onSuccess: (data) => {
             const user = userMapper.toDomain(data.user);
-            setSession(user, data.token, data.refreshToken);
+            setSession(user, data.token, data.refreshToken, data.tenantId);
             persistTokens(data.token, data.refreshToken);
             persistUserData(JSON.stringify(data.user));
         },

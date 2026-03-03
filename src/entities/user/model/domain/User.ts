@@ -1,4 +1,4 @@
-import { ROLES } from '@/shared/config/permissions';
+import { ROLES } from '@/entities/session/model/constants';
 import type { Role } from './Role';
 import type { Permission } from './Permission';
 import type { TelegramUserData } from '@/entities/user';

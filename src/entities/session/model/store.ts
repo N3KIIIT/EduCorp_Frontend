@@ -8,12 +8,15 @@ interface SessionState {
     user: User | null;
     accessToken: string | null;
     refreshToken: string | null;
-    tenantId: string | null;
+    tenantId: string;
     isAuthenticated: boolean;
 }
 
 interface SessionStore extends SessionState {
-    setSession: (user: User, accessToken: string, refreshToken: string) => void;
+    setSession: (user: User, 
+                 accessToken: string,
+                 refreshToken: string,
+                 tenantId: string) => void;
     setUser: (user: User) => void;
     clearSession: () => void;
 
@@ -29,14 +32,15 @@ export const useSessionStore = create<SessionStore>()((set, get) => ({
     user: null,
     accessToken: null,
     refreshToken: null,
-    tenantId: null,
+    tenantId: '',
     isAuthenticated: false,
 
-    setSession: (user, accessToken, refreshToken) => {
+    setSession: (user, accessToken, refreshToken, tenantId) => {
         set({
             user,
             accessToken,
             refreshToken,
+            tenantId,
             isAuthenticated: true,
         });
     },
