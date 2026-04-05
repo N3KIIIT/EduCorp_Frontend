@@ -74,7 +74,7 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                     </PermissionGuard>
                 }
             >
-                {testQuery.data?.title || t('details')}
+                {testQuery.data ? t(`testType.${testQuery.data.type}`) : t('details')}
             </PanelHeader>
 
             {testQuery.isLoading && <Title level="2">{t('loading')}</Title>}
@@ -85,29 +85,26 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                         <Card mode="shadow">
                             <Box style={{ padding: 12 }}>
                                 <Headline level="1" weight="2">
-                                    {testQuery.data.title || t(`testType.${testQuery.data.type}`)}
+                                    {t(`testType.${testQuery.data.type}`)}
                                 </Headline>
                                 <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
                                     <Chip>{t(`testType.${testQuery.data.type}`)}</Chip>
-                                    <Chip>
-                                        {t('passingScore')}: {testQuery.data.passingScore}%
-                                    </Chip>
-                                    {testQuery.data.durationInMinutes && (
+                                    {testQuery.data.passingScore && (
                                         <Chip>
-                                            {t('duration')}: {testQuery.data.durationInMinutes} {t('minutes')}
+                                            {t('passingScore')}: {testQuery.data.passingScore}%
                                         </Chip>
                                     )}
-                                    {testQuery.data.questionsCount && (
+                                    {testQuery.data.timeLimitSeconds && (
                                         <Chip>
-                                            {testQuery.data.questionsCount} {t('questions')}
+                                            {t('duration')}: {Math.round(Number(testQuery.data.timeLimitSeconds) / 60)} {t('minutes')}
+                                        </Chip>
+                                    )}
+                                    {testQuery.data.questions?.length > 0 && (
+                                        <Chip>
+                                            {testQuery.data.questions.length} {t('questions')}
                                         </Chip>
                                     )}
                                 </div>
-                                {testQuery.data.description && (
-                                    <Div style={{ marginTop: 12 }}>
-                                        <Caption>{testQuery.data.description}</Caption>
-                                    </Div>
-                                )}
                             </Box>
                         </Card>
                     </Group>

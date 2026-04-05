@@ -81,20 +81,20 @@ export const TestList: React.FC<TestListProps> = ({ courseId, onSelectTest }) =>
                             <CardGrid>
                                 <div style={{ flex: 1 }}>
                                     <Headline level="1" weight="2">
-                                        {test.title || t(`testType.${test.type}`)}
+                                        {t(`testType.${test.type}`)}
                                     </Headline>
                                     <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
                                         <Chip>
                                             {t(`testType.${test.type}`)}
                                         </Chip>
-                                        {test.questionsCount && (
-                                            <Chip>
-                                                {test.questionsCount} {t('questions')}
-                                            </Chip>
-                                        )}
                                         {test.passingScore && (
                                             <Chip>
                                                 {t('passingScore')}: {test.passingScore}%
+                                            </Chip>
+                                        )}
+                                        {test.timeLimitSeconds && (
+                                            <Chip>
+                                                {t('duration')}: {Math.round(Number(test.timeLimitSeconds) / 60)} {t('minutes')}
                                             </Chip>
                                         )}
                                     </div>

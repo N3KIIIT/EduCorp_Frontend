@@ -22,7 +22,7 @@ export const useStartAttempt = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (request: StartAttemptRequest) => {
+        mutationFn: async (request: StartAttemptRequest): Promise<string> => {
             const response = await apiClient.post({
                 url: '/Attempts/Start',
                 body: request,
@@ -32,7 +32,12 @@ export const useStartAttempt = () => {
                 throw response.error;
             }
 
-            return response.data as string;
+            const data = response.data;
+            if (typeof data === 'string') return data;
+            if (data && typeof data === 'object' && 'id' in data) {
+                return (data as AttemptResponse).id;
+            }
+            throw new Error('Invalid response from /Attempts/Start');
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, 'active', variables.testId] });
