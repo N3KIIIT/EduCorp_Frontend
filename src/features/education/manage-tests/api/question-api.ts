@@ -9,12 +9,18 @@ import {
     UpdateQuestionRequest,
     IQuestionDataRequest,
     QuestionDataType,
-    ChoiceOptionRequest,
-    PagedRequest,
-    PagedResponseOfQuestionBriefResponse, PostApiQuestionsByTestByTestIdResponses,
+    PagedResponseOfQuestionBriefResponse,
+    ReorderQuestionsRequest,
+    SearchQuestionsQuery,
 } from '@/lib/api-client/types.gen';
 
 const QUESTIONS_QUERY_KEY = ['education', 'questions'];
+
+const questionKeys = {
+    all: QUESTIONS_QUERY_KEY,
+    byTest: (testId: string) => [...QUESTIONS_QUERY_KEY, 'byTest', testId] as const,
+    detail: (questionId: string) => [...QUESTIONS_QUERY_KEY, 'detail', questionId] as const,
+};
 
 // Type aliases for cleaner usage
 export type Question = QuestionResponse;
@@ -24,21 +30,21 @@ export { QuestionDataType };
 
 export const useQuestions = (testId: string) => {
     return useQuery({
-        queryKey: [...QUESTIONS_QUERY_KEY, testId],
+        queryKey: questionKeys.byTest(testId),
         queryFn: async () => {
-            const response = await apiClient.post<PostApiQuestionsByTestByTestIdResponses, PagedRequest>({
+            const response = await apiClient.get({
                 url: '/Questions/ByTest/{testId}',
                 path: { testId },
-                body: { page: 1, pageSize: 50 }
+                query: { page: 1, pageSize: 50 },
             });
 
-            if (!response.data?.items) {
+            if (!response.data) {
                 throw new Error('No data received');
             }
 
-            return response.data.items;
+            return (response.data as PagedResponseOfQuestionBriefResponse).items ?? [];
         },
-        enabled: !!testId
+        enabled: !!testId,
     });
 };
 
@@ -47,15 +53,17 @@ export const useCreateQuestion = () => {
 
     return useMutation({
         mutationFn: async (request: AddQuestionRequest) => {
-            const response = await apiClient.post<unknown, AddQuestionRequest>({
+            const response = await apiClient.post({
                 url: '/Questions',
                 body: request
             });
 
-            return response.data!;
+            if (response.error) {
+                throw response.error;
+            }
         },
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: [...QUESTIONS_QUERY_KEY, variables.testId] });
+            queryClient.invalidateQueries({ queryKey: questionKeys.byTest(variables.testId) });
         }
     });
 };
@@ -65,16 +73,18 @@ export const useUpdateQuestion = () => {
 
     return useMutation({
         mutationFn: async ({ id, ...request }: UpdateQuestionRequest & { id: string }) => {
-            const response = await apiClient.put<unknown, UpdateQuestionRequest>({
+            const response = await apiClient.put({
                 url: '/Questions/{id}',
                 path: { id },
                 body: request
             });
 
-            return response;
+            if (response.error) {
+                throw response.error;
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUESTIONS_QUERY_KEY });
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: questionKeys.detail(variables.id) });
         }
     });
 };
@@ -84,28 +94,74 @@ export const useDeleteQuestion = () => {
 
     return useMutation({
         mutationFn: async (questionId: string) => {
-            await apiClient.delete<void>({
+            const response = await apiClient.delete<void>({
                 url: '/Questions/{id}',
                 path: { id: questionId }
             });
+
+            if (response.error) {
+                throw response.error;
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUESTIONS_QUERY_KEY });
+        onSuccess: (_, questionId) => {
+            queryClient.invalidateQueries({ queryKey: questionKeys.detail(questionId) });
+            queryClient.invalidateQueries({ queryKey: questionKeys.all });
         }
     });
 };
 
 export const useQuestion = (questionId: string) => {
     return useQuery({
-        queryKey: [...QUESTIONS_QUERY_KEY, questionId],
+        queryKey: questionKeys.detail(questionId),
         queryFn: async () => {
             const response = await apiClient.get<QuestionResponse>({
                 url: '/Questions/{id}',
                 path: { id: questionId }
             });
 
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
-        enabled: !!questionId
+        enabled: !!questionId,
+    });
+};
+
+export const useReorderQuestions = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ testId, ...request }: ReorderQuestionsRequest & { testId: string }) => {
+            const response = await apiClient.post({
+                url: '/Questions/Reorder/{testId}',
+                path: { testId },
+                body: request satisfies ReorderQuestionsRequest,
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: questionKeys.byTest(variables.testId) });
+        },
+    });
+};
+
+export const useSearchQuestions = (query: SearchQuestionsQuery, enabled = true) => {
+    return useQuery({
+        queryKey: [...QUESTIONS_QUERY_KEY, 'search', query],
+        queryFn: async () => {
+            const response = await apiClient.post({
+                url: '/Questions/Search',
+                body: query,
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return response.data as PagedResponseOfQuestionBriefResponse;
+        },
+        enabled,
     });
 };

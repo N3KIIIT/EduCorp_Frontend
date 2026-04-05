@@ -8,11 +8,17 @@ import {
     CreateTestRequest,
     UpdateTestRequest,
     TestType,
-    PagedRequest,
-    PagedResponseOfTestBriefResponse, PostApiTestsPublishedResponses,
+    PagedResponseOfTestBriefResponse,
+    PostApiTestsPublishedResponses,
 } from '@/lib/api-client/types.gen';
 
 const TESTS_QUERY_KEY = ['education', 'tests'];
+
+const testKeys = {
+    all: TESTS_QUERY_KEY,
+    byCourse: (courseId: string) => [...TESTS_QUERY_KEY, 'byCourse', courseId] as const,
+    detail: (testId: string) => [...TESTS_QUERY_KEY, 'detail', testId] as const,
+};
 
 // Type aliases for cleaner usage
 export type Test = TestResponse;
@@ -21,21 +27,21 @@ export { TestType };
 
 export const useTests = (courseId: string) => {
     return useQuery({
-        queryKey: [...TESTS_QUERY_KEY, courseId],
+        queryKey: testKeys.byCourse(courseId),
         queryFn: async () => {
-            const response = await apiClient.post<PostApiTestsPublishedResponses, PagedRequest>({
-                url: 'Tests/ByCourse/{courseId}',
+            const response = await apiClient.get({
+                url: '/Tests/ByCourse/{courseId}',
                 path: { courseId },
-                body: { page: 1, pageSize: 50 }
+                query: { page: 1, pageSize: 50 },
             });
 
-            if (!response.data?.items) {
+            if (!response.data) {
                 throw new Error('No data received');
             }
 
-            return response.data.items;
+            return (response.data as PagedResponseOfTestBriefResponse).items ?? [];
         },
-        enabled: !!courseId
+        enabled: !!courseId,
     });
 };
 
@@ -44,16 +50,18 @@ export const useCreateTest = () => {
 
     return useMutation({
         mutationFn: async (request: CreateTestRequest) => {
-            const response = await apiClient.post<unknown, CreateTestRequest>({
+            const response = await apiClient.post({
                 url: '/Tests',
                 body: request
             });
 
-            return response.data!;
+            if (response.error) {
+                throw response.error;
+            }
         },
         onSuccess: (_, variables) => {
             if (variables.courseId) {
-                queryClient.invalidateQueries({ queryKey: [...TESTS_QUERY_KEY, variables.courseId] });
+                queryClient.invalidateQueries({ queryKey: testKeys.byCourse(variables.courseId) });
             }
         }
     });
@@ -64,16 +72,18 @@ export const useUpdateTest = () => {
 
     return useMutation({
         mutationFn: async ({ id, ...request }: UpdateTestRequest & { id: string }) => {
-            const response = await apiClient.put<unknown, UpdateTestRequest>({
+            const response = await apiClient.put({
                 url: '/Tests/{id}',
                 path: { id },
                 body: request
             });
 
-            return response;
+            if (response.error) {
+                throw response.error;
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: TESTS_QUERY_KEY });
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: testKeys.detail(variables.id) });
         }
     });
 };
@@ -83,28 +93,93 @@ export const useDeleteTest = () => {
 
     return useMutation({
         mutationFn: async (testId: string) => {
-            await apiClient.delete<void>({
-                url: 'Tests/{id}',
+            const response = await apiClient.delete<void>({
+                url: '/Tests/{id}',
                 path: { id: testId }
             });
+
+            if (response.error) {
+                throw response.error;
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: TESTS_QUERY_KEY });
+        onSuccess: (_, testId) => {
+            queryClient.invalidateQueries({ queryKey: testKeys.detail(testId) });
+            queryClient.invalidateQueries({ queryKey: testKeys.all });
         }
     });
 };
 
 export const useTest = (testId: string) => {
     return useQuery({
-        queryKey: [...TESTS_QUERY_KEY, testId],
+        queryKey: testKeys.detail(testId),
         queryFn: async () => {
             const response = await apiClient.get<TestResponse>({
-                url: 'Tests/{id}',
+                url: '/Tests/{id}',
                 path: { id: testId }
             });
 
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
-        enabled: !!testId
+        enabled: !!testId,
+    });
+};
+
+export const useTestsByLesson = (lessonId: string) => {
+    return useQuery({
+        queryKey: [...TESTS_QUERY_KEY, 'byLesson', lessonId],
+        queryFn: async () => {
+            const response = await apiClient.get({
+                url: '/Tests/ByLesson/{lessonId}',
+                path: { lessonId },
+                query: { page: 1, pageSize: 50 },
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return (response.data as PagedResponseOfTestBriefResponse).items ?? [];
+        },
+        enabled: !!lessonId,
+    });
+};
+
+export const usePublishedTests = (page = 1, pageSize = 50) => {
+    return useQuery({
+        queryKey: [...TESTS_QUERY_KEY, 'published', page, pageSize],
+        queryFn: async () => {
+            const response = await apiClient.get<PostApiTestsPublishedResponses>({
+                url: '/Tests/Published',
+                query: { page, pageSize },
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return response.data as PagedResponseOfTestBriefResponse;
+        },
+    });
+};
+
+export const useArchiveTest = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (testId: string) => {
+            const response = await apiClient.post({
+                url: '/Tests/{id}/Archive',
+                path: { id: testId },
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: (_, testId) => {
+            queryClient.invalidateQueries({ queryKey: testKeys.detail(testId) });
+            queryClient.invalidateQueries({ queryKey: testKeys.all });
+        },
     });
 };

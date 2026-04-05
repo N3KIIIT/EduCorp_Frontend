@@ -21,18 +21,10 @@ export const useInviteLinks = (
     return useQuery({
         queryKey: [...INVITE_LINKS_QUERY_KEY, tenantId, page, pageSize, statusFilter, sortField, isDescending],
         queryFn: async () => {
-            const filters = statusFilter
-                ? [{ field: 'Status', operator: 0, value: statusFilter }]
-                : [];
-
-            const response = await apiClient.post<PagedResponseOfTenantLinkResponse>({
-                url: `/Tenants/GetTenantInviteLinks/${tenantId}`,
-                body: {
-                    page,
-                    pageSize,
-                    filters,
-                    sorts: [{ field: sortField, isDescending }]
-                }
+            const response = await apiClient.get<PagedResponseOfTenantLinkResponse>({
+                url: '/Tenants/GetTenantInviteLinks/{tenantId}',
+                path: { tenantId },
+                query: { page, pageSize, status: statusFilter, sortField, isDescending },
             });
 
             if (!response.data) {
@@ -41,7 +33,7 @@ export const useInviteLinks = (
 
             return response.data;
         },
-        enabled: !!tenantId
+        enabled: !!tenantId,
     });
 };
 
@@ -55,25 +47,17 @@ export const useInfiniteInviteLinks = (
     return useInfiniteQuery<PagedResponseOfTenantLinkResponse, Error>({
         queryKey: [...INVITE_LINKS_QUERY_KEY, 'infinite', tenantId, statusFilter, sortField, isDescending],
         queryFn: async ({ pageParam = 1 }): Promise<PagedResponseOfTenantLinkResponse> => {
-            const filters = statusFilter
-                ? [{ field: 'Status', operator: 0, value: statusFilter }]
-                : [];
-
-            const response = await apiClient.post<PagedResponseOfTenantLinkResponse>({
-                url: `/Tenants/GetTenantInviteLinks/${tenantId}`,
-                body: {
-                    page: pageParam as number,
-                    pageSize,
-                    filters,
-                    sorts: [{ field: sortField, isDescending }]
-                }
+            const response = await apiClient.get<PagedResponseOfTenantLinkResponse>({
+                url: '/Tenants/GetTenantInviteLinks/{tenantId}',
+                path: { tenantId },
+                query: { page: pageParam as number, pageSize, status: statusFilter, sortField, isDescending },
             });
 
             if (!response.data) {
                 throw new Error('No data received');
             }
 
-            return response.data as any as PagedResponseOfTenantLinkResponse;
+            return response.data as PagedResponseOfTenantLinkResponse;
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage: any) => {
@@ -89,23 +73,16 @@ export const useGenerateInviteLink = (tenantId: string) => {
 
     return useMutation({
         mutationFn: async (request: Omit<GenerateInviteRequest, 'tenantId'>) => {
-            
-            const req: GenerateInviteRequest = {
-                tenantId: tenantId,
-                expiresIn: request.expiresIn,
-                maxUses: request.maxUses
-            }
-            
             const response = await apiClient.post({
                 url: '/Tenants/GenerateInviteLink',
-                body: req 
+                body: { tenantId, ...request } satisfies GenerateInviteRequest
             });
 
             if (response.error) {
                 throw response.error;
             }
 
-            return response;
+            return response.data as string;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [...INVITE_LINKS_QUERY_KEY, tenantId] });
@@ -119,7 +96,8 @@ export const useRevokeInviteLink = (tenantId: string) => {
     return useMutation({
         mutationFn: async (token: string) => {
             const response = await apiClient.post<void>({
-                url: `/Tenants/RevokeTenantInvite/${token}`
+                url: '/Tenants/RevokeTenantInvite/{token}',
+                path: { token },
             });
 
             if (response.error) {

@@ -21,6 +21,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
     fallback,
 }) => {
     const t = useTranslations('auth.guard');
+    const pathname = usePathname();
     const {
         isAuthenticated,
         user,
@@ -31,7 +32,6 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
     } = useSessionStore();
 
     if (!isAuthenticated || !user) {
-        const pathname = usePathname();
         if (pathname !== '/') {
             redirect('/');
         }

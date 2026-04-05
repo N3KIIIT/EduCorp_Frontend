@@ -82,8 +82,10 @@ export async function refreshAccessToken(): Promise<AuthenticationResponse | nul
         .then((data) => {
             const user = userMapper.toDomain(data.user);
             const store = useSessionStore.getState();
+            // Use tenantId from refresh response; fall back to store value if not present
+            const tenantId = data.tenantId || store.tenantId;
 
-            store.setSession(user, data.token, data.refreshToken);
+            store.setSession(user, data.token, data.refreshToken, tenantId);
             persistTokens(data.token, data.refreshToken);
             persistUserData(JSON.stringify(data.user));
 

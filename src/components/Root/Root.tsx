@@ -18,17 +18,22 @@ import { AutoLoginProvider } from "@/features/auth/auto-login/ui/AutoLoginProvid
 import { VKUIProvider } from "@/components/providers/VKUIProvider";
 import { RouterProvider } from "@/components/providers/RouterProvider";
 import { ThemeProvider } from '@/core/theme/ThemeContext';
+import { initApiClient } from '@/shared/api/base-client';
 
+// Initialize once at module load — no side-effects inside the module itself
+initApiClient();
 
 function makeQueryClient() {
     return new QueryClient({
         defaultOptions: {
             queries: {
-                retry: 5,
+                retry: 1,
+                retryDelay: 1000,
                 refetchOnWindowFocus: false,
+                staleTime: 30_000,
             },
             mutations: {
-                retry: 1,
+                retry: 0,
             }
         }
     });

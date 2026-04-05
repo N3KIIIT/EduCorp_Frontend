@@ -9,7 +9,7 @@ import type { CourseBriefResponse } from '@/lib/api-client/types.gen';
 import {ROLES} from "@/entities/session";
 
 interface CourseListProps {
-    tenantId: string;
+    tenantId?: string;
     onEditCourse?: (courseId: string) => void;
     onViewCourse: (courseId: string) => void;
 }
@@ -40,7 +40,11 @@ export const CourseList: React.FC<CourseListProps> = ({ tenantId, onEditCourse, 
     }
 
     if (coursesQuery.error) {
-        return <Caption>{t('errorLoading')}</Caption>;
+        const errMsg = coursesQuery.error instanceof Error
+            ? coursesQuery.error.message
+            : String(coursesQuery.error);
+        console.error('[CourseList] Error loading courses:', coursesQuery.error);
+        return <Caption>{t('errorLoading')}: {errMsg}</Caption>;
     }
 
     if (!coursesQuery.data || coursesQuery.data.length === 0) {

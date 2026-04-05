@@ -5,13 +5,12 @@ import { apiClient } from '@/shared/api/base-client';
 import {
     AttemptResponse,
     AttemptBriefResponse,
+    AttemptResultResponse,
     StartAttemptRequest,
     SubmitAnswerRequest,
-    IAnswerDataRequest,
     TestResponse,
-    QuestionResponse,
-    PagedRequest,
-    PagedResponseOfAttemptBriefResponse, PostApiAttemptsStartData, PostApiAttemptsStartResponses,
+    PagedResponseOfAttemptBriefResponse,
+    PostApiAttemptsStartResponses,
 } from '@/lib/api-client/types.gen';
 
 const ATTEMPTS_QUERY_KEY = ['education', 'attempts'];
@@ -28,30 +27,31 @@ export const useStartAttempt = () => {
                 url: '/Attempts/Start',
                 body: request,
             });
-            return response.data!;
+
+            if (response.error) {
+                throw response.error;
+            }
+
+            return response.data as string;
         },
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, variables.testId] });
+            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, 'active', variables.testId] });
         },
     });
 };
 
 export const useSubmitAnswer = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: async (request: SubmitAnswerRequest) => {
-            const response = await apiClient.post<unknown, SubmitAnswerRequest>({
+            const response = await apiClient.post({
                 url: '/Attempts/{attemptId}/SubmitAnswer',
                 path: { attemptId: request.attemptId },
                 body: request,
             });
-            return response.data;
-        },
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({
-                queryKey: [...ATTEMPTS_QUERY_KEY, variables.attemptId],
-            });
+
+            if (response.error) {
+                throw response.error;
+            }
         },
     });
 };
@@ -61,15 +61,17 @@ export const useCompleteAttempt = () => {
 
     return useMutation({
         mutationFn: async (attemptId: string) => {
-            const response = await apiClient.post<AttemptResponse, undefined>({
+            const response = await apiClient.post({
                 url: '/Attempts/{id}/Complete',
                 path: { id: attemptId },
-                body: undefined,
             });
-            return response.data!;
+
+            if (response.error) {
+                throw response.error;
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ATTEMPTS_QUERY_KEY });
+        onSuccess: (_, attemptId) => {
+            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, attemptId] });
         },
     });
 };
@@ -82,7 +84,8 @@ export const useAttempt = (attemptId: string) => {
                 url: '/Attempts/{id}',
                 path: { id: attemptId },
             });
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
         enabled: !!attemptId,
     });
@@ -96,7 +99,8 @@ export const useAttemptWithAnswers = (attemptId: string) => {
                 url: '/Attempts/{id}/WithAnswers',
                 path: { id: attemptId },
             });
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
         enabled: !!attemptId,
     });
@@ -110,7 +114,8 @@ export const useAttemptResults = (attemptId: string) => {
                 url: '/Attempts/{id}/Results',
                 path: { id: attemptId },
             });
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
         enabled: !!attemptId,
     });
@@ -139,8 +144,175 @@ export const useTestWithQuestions = (testId: string) => {
                 url: '/Tests/{id}/WithQuestions',
                 path: { id: testId },
             });
-            return response.data!;
+            if (!response.data) throw new Error('No data received');
+            return response.data;
         },
         enabled: !!testId,
+    });
+};
+
+export const useUpdateAnswer = () => {
+    return useMutation({
+        mutationFn: async ({ id, ...request }: SubmitAnswerRequest & { id: string }) => {
+            const response = await apiClient.post({
+                url: '/Attempts/{id}/UpdateAnswer',
+                path: { id },
+                body: request satisfies SubmitAnswerRequest,
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+    });
+};
+
+export const usePauseAttempt = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (attemptId: string) => {
+            const response = await apiClient.post({
+                url: '/Attempts/{id}/Pause',
+                path: { id: attemptId },
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: (_, attemptId) => {
+            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, attemptId] });
+        },
+    });
+};
+
+export const useResumeAttempt = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (attemptId: string) => {
+            const response = await apiClient.post({
+                url: '/Attempts/{id}/Resume',
+                path: { id: attemptId },
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: (_, attemptId) => {
+            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, attemptId] });
+        },
+    });
+};
+
+export const useReviewAttempt = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (attemptId: string) => {
+            const response = await apiClient.post({
+                url: '/Attempts/{id}/Review',
+                path: { id: attemptId },
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: (_, attemptId) => {
+            queryClient.invalidateQueries({ queryKey: [...ATTEMPTS_QUERY_KEY, attemptId] });
+        },
+    });
+};
+
+export const useAttemptResult = (attemptId: string) => {
+    return useQuery({
+        queryKey: [...ATTEMPTS_QUERY_KEY, attemptId, 'result'],
+        queryFn: async () => {
+            const response = await apiClient.get({
+                url: '/Attempts/GetAttemptResult/{id}',
+                path: { id: attemptId },
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return response.data as AttemptResultResponse;
+        },
+        enabled: !!attemptId,
+    });
+};
+
+export const useAttemptsByTest = (testId: string, page = 1, pageSize = 20) => {
+    return useQuery({
+        queryKey: [...ATTEMPTS_QUERY_KEY, 'byTest', testId, page, pageSize],
+        queryFn: async () => {
+            const response = await apiClient.get({
+                url: '/Attempts/ByTest/{testId}',
+                path: { testId },
+                query: { page, pageSize },
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return response.data as PagedResponseOfAttemptBriefResponse;
+        },
+        enabled: !!testId,
+    });
+};
+
+export const useAttemptsByUser = (userId: string, page = 1, pageSize = 20) => {
+    return useQuery({
+        queryKey: [...ATTEMPTS_QUERY_KEY, 'byUser', userId, page, pageSize],
+        queryFn: async () => {
+            const response = await apiClient.get({
+                url: '/Attempts/ByUser/{userId}',
+                path: { userId },
+                query: { page, pageSize },
+            });
+
+            if (!response.data) {
+                throw new Error('No data received');
+            }
+
+            return response.data as PagedResponseOfAttemptBriefResponse;
+        },
+        enabled: !!userId,
+    });
+};
+
+export const useBestAttempt = (testId: string, userId: string) => {
+    return useQuery({
+        queryKey: [...ATTEMPTS_QUERY_KEY, 'best', testId, userId],
+        queryFn: async () => {
+            const response = await apiClient.post({
+                url: '/Attempts/Best/{testId}/{userId}',
+                path: { testId, userId },
+            });
+
+            return response.data as AttemptBriefResponse | null;
+        },
+        enabled: !!testId && !!userId,
+    });
+};
+
+export const useLastAttempt = (testId: string, userId: string) => {
+    return useQuery({
+        queryKey: [...ATTEMPTS_QUERY_KEY, 'last', testId, userId],
+        queryFn: async () => {
+            const response = await apiClient.get({
+                url: '/Attempts/Last/{testId}/{userId}',
+                path: { testId, userId },
+            });
+
+            return response.data as AttemptBriefResponse | null;
+        },
+        enabled: !!testId && !!userId,
+        retry: false,
     });
 };

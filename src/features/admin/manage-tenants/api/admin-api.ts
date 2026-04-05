@@ -4,6 +4,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {apiClient} from '@/shared/api/base-client';
 import type {
     AssignRoleRequest,
+    ConsumeTenantInviteCommand,
     CreateTenantRequest,
     PostApiTenantsGetAllResponses,
     PostApiTenantsResponse,
@@ -18,12 +19,9 @@ export const useTenants = () => {
     return useQuery({
         queryKey: TENANTS_QUERY_KEY,
         queryFn: async () => {
-            const response = await apiClient.post<PostApiTenantsGetAllResponses>({
+            const response = await apiClient.get<PostApiTenantsGetAllResponses>({
                 url: '/Tenants/GetAll',
-                body: {
-                    page: 1,
-                    pageSize: 100
-                }
+                query: { page: 1, pageSize: 100 },
             });
 
             if (!response.data) {
@@ -62,8 +60,8 @@ export const useTenant = (tenantId: string) => {
         queryKey: [...TENANTS_QUERY_KEY, tenantId],
         queryFn: async () => {
             const response = await apiClient.get<TenantGeneralResponse>({
-                url: `/Tenants/${tenantId}`,
-                query: { tenantId }
+                url: '/Tenants/{id}',
+                path: { id: tenantId },
             });
 
             if (!response.data) {
@@ -81,14 +79,10 @@ export const useUpdateUserRole = (tenantId: string) => {
 
     return useMutation({
         mutationFn: async ({ userId, role }: { userId: string, role: string }) => {
-            
-            const request : AssignRoleRequest = {
-                role: role
-            };
-            
-            const response = await apiClient.post<void>({
-                url: `/Users/${userId}/roles`,
-                body: { role }
+            const response = await apiClient.post({
+                url: '/Users/{userId}/roles',
+                path: { userId },
+                body: { role } satisfies AssignRoleRequest,
             });
 
             if (response.error) {
@@ -107,7 +101,8 @@ export const useRevokeRole = (tenantId: string) => {
     return useMutation({
         mutationFn: async ({ userId, role }: { userId: string, role: string }) => {
             const response = await apiClient.delete<void>({
-                url: `/Users/${userId}/roles/${role}`
+                url: '/Users/{userId}/roles/{role}',
+                path: { userId, role },
             });
 
             if (response.error) {
@@ -125,7 +120,8 @@ export const useRoles = (tenantId: string) => {
         queryKey: ['admin', 'roles'],
         queryFn: async () => {
             const response = await apiClient.get<RoleResponse[]>({
-                url: `/Roles/GetAll/${tenantId}`
+                url: '/Roles/GetAll/{tenantId}',
+                path: { tenantId },
             });
 
             if (!response.data) {
@@ -136,5 +132,20 @@ export const useRoles = (tenantId: string) => {
                 index === self.findIndex((r) => r.name === role.name)
             );
         }
+    });
+};
+
+export const useConsumeInvite = () => {
+    return useMutation({
+        mutationFn: async (request: ConsumeTenantInviteCommand) => {
+            const response = await apiClient.post({
+                url: '/Tenants/ConsumeInvite',
+                body: request,
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
     });
 };

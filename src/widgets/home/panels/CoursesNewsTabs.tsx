@@ -45,9 +45,7 @@ export const CoursesNewsTabs: React.FC<CourseDetailsPanelProps> = ({id}) => {
 
             <CourseEditModal
                 courseId={currentCourseId!}
-                onClose={() =>
-                    closeModal
-                }
+                onClose={closeModal}
                 onSuccess={closeModal}
             />
         </ModalRoot>
