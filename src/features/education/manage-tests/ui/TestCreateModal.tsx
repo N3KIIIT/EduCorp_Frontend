@@ -22,13 +22,14 @@ interface TestCreateModalProps {
     onSuccess?: () => void;
 }
 
-const TEST_TYPES: Array<{ value: TestType; label: string }> = [
-    { value: 'Practice', label: 'Практический' },
-    { value: 'Control', label: 'Контрольный' },
-];
-
 export const TestCreateModal: React.FC<TestCreateModalProps> = ({ courseId, onClose, onSuccess }) => {
     const t = useTranslations('education.tests.modal');
+    const tTests = useTranslations('education.tests');
+
+    const TEST_TYPES: Array<{ value: TestType; label: string }> = [
+        { value: 'Practice', label: tTests('testType.Practice') },
+        { value: 'Control', label: tTests('testType.Control') },
+    ];
     const [testType, setTestType] = useState<TestType>('Practice');
     const [passingScore, setPassingScore] = useState('70');
     const [durationInMinutes, setDurationInMinutes] = useState('');

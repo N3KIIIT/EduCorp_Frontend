@@ -309,6 +309,25 @@
         "allowPause": "Разрешить паузу",
         "save": "Создать тест",
         "cancel": "Отмена"
+      },
+      "take": {
+        "results": "Результаты теста",
+        "resultsPassed": "Поздравляем!",
+        "resultsFailed": "Тест не пройден",
+        "resultsPassedDesc": "Вы успешно прошли тест",
+        "resultsFailedDesc": "Не сдавайтесь, попробуйте ещё раз!",
+        "score": "Результат",
+        "answered": "Отвечено",
+        "timeSpent": "Затраченное время",
+        "backToTest": "Вернуться к курсу",
+        "progress": "Прогресс",
+        "questionOf": "Вопрос {current} из {total}",
+        "points": "балл",
+        "showHint": "Показать подсказку",
+        "hideHint": "Скрыть подсказку",
+        "selectMatch": "Выберите пару",
+        "fillBlankPlaceholder": "Введите ответ",
+        "unsupportedType": "Неподдерживаемый тип вопроса"
       }
     },
     "questions": {
@@ -360,7 +379,39 @@
         "explanation": "Объяснение",
         "explanationPlaceholder": "Пояснение правильного ответа",
         "save": "Создать вопрос",
-        "cancel": "Отмена"
+        "cancel": "Отмена",
+        "questionTypes": {
+          "SingleChoice": "Один правильный ответ",
+          "MultipleChoice": "Несколько правильных ответов",
+          "Text": "Текстовый ответ",
+          "Numeric": "Числовой ответ",
+          "Matching": "Установить соответствие",
+          "Ordering": "Упорядочивание",
+          "FillInTheBlank": "Заполнить пропуск"
+        },
+        "optionLabel": "Вариант",
+        "answerVariantLabel": "Вариант ответа",
+        "matchingTitle": "Установление соответствия",
+        "matchingSubtitle": "Создайте пары между элементами слева и справа.",
+        "leftItems": "Левый столбец",
+        "leftItem": "Элемент слева",
+        "addLeftItem": "Добавить элемент",
+        "rightItems": "Правый столбец",
+        "rightItem": "Элемент справа",
+        "addRightItem": "Добавить элемент",
+        "matchPairs": "Правильные пары",
+        "selectMatch": "Выберите пару",
+        "orderingTitle": "Упорядочивание",
+        "orderingSubtitle": "Установите элементы в правильном порядке.",
+        "orderItem": "Элемент",
+        "addOrderItem": "Добавить элемент",
+        "orderingHint": "Расставьте элементы в правильном порядке. При прохождении теста они будут перемешаны.",
+        "fillBlankTitle": "Заполнение пропусков",
+        "fillBlankSubtitle": "Вставьте переменные {{ключ}} в текст вопроса.",
+        "fillBlankInstruction": "Для каждого ключа укажите возможные варианты правильных ответов.",
+        "fillBlankNoKeys": "Добавьте переменные в формате {{слово}} в текст вопроса",
+        "blankAnswerPlaceholder": "Правильный ответ",
+        "addBlankAnswer": "Добавить вариант"
       }
     }
   },
@@ -382,7 +433,8 @@
         "title": "Детали тенанта",
         "users": "Пользователи",
         "settings": "Настройки",
-        "inviteLinks": "Пригласительные ссылки"
+        "inviteLinks": "Пригласительные ссылки",
+        "notFound": "Тенант не найден"
       },
       "users": {
         "title": "Пользователи тенанта",

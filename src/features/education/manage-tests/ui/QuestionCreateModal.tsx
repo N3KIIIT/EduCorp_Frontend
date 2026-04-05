@@ -35,16 +35,6 @@ interface QuestionCreateModalProps {
     onSuccess?: () => void;
 }
 
-const QUESTION_TYPES: Array<{ value: QuestionDataType; label: string }> = [
-    { value: 'SingleChoice', label: 'Один правильный ответ' },
-    { value: 'MultipleChoice', label: 'Несколько правильных ответов' },
-    { value: 'Text', label: 'Текстовый ответ' },
-    { value: 'Numeric', label: 'Числовой ответ' },
-    { value: 'Matching', label: 'Соответствие' },
-    { value: 'Ordering', label: 'Упорядочивание' },
-    { value: 'FillInTheBlank', label: 'Заполнить пропуск' },
-];
-
 export const QuestionCreateModal: React.FC<QuestionCreateModalProps> = ({
     testId,
     onClose,
@@ -52,6 +42,16 @@ export const QuestionCreateModal: React.FC<QuestionCreateModalProps> = ({
 }) => {
     const t = useTranslations('education.questions.modal');
     const platform = usePlatform();
+
+    const QUESTION_TYPES: Array<{ value: QuestionDataType; label: string }> = [
+        { value: 'SingleChoice', label: t('questionTypes.SingleChoice') },
+        { value: 'MultipleChoice', label: t('questionTypes.MultipleChoice') },
+        { value: 'Text', label: t('questionTypes.Text') },
+        { value: 'Numeric', label: t('questionTypes.Numeric') },
+        { value: 'Matching', label: t('questionTypes.Matching') },
+        { value: 'Ordering', label: t('questionTypes.Ordering') },
+        { value: 'FillInTheBlank', label: t('questionTypes.FillInTheBlank') },
+    ];
     const [questionType, setQuestionType] = useState<QuestionDataType>('SingleChoice');
     const [questionText, setQuestionText] = useState('');
     const [description, setDescription] = useState('');
@@ -358,7 +358,7 @@ export const QuestionCreateModal: React.FC<QuestionCreateModalProps> = ({
                                     borderRadius: 8,
                                     marginBottom: 8
                                 }}>
-                                    <FormItem top={`Вариант ${index + 1}`}>
+                                    <FormItem top={`${t('optionLabel')} ${index + 1}`}>
                                         <Input
                                             value={option.text}
                                             onChange={(e) => updateOption(option.id, 'text', e.target.value)}
@@ -424,7 +424,7 @@ export const QuestionCreateModal: React.FC<QuestionCreateModalProps> = ({
                                 {t('acceptableAnswersSubtitle')}
                             </Caption>
                             {acceptableAnswers.map((answer, index) => (
-                                <FormItem key={index} top={`Вариант ответа ${index + 1}`}>
+                                <FormItem key={index} top={`${t('answerVariantLabel')} ${index + 1}`}>
                                     <div style={{ display: 'flex', gap: 8 }}>
                                         <Input
                                             value={answer}
