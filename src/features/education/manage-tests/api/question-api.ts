@@ -9,6 +9,7 @@ import {
     UpdateQuestionRequest,
     IQuestionDataRequest,
     QuestionDataType,
+    PagedRequest,
     PagedResponseOfQuestionBriefResponse,
     ReorderQuestionsRequest,
     SearchQuestionsQuery,
@@ -32,10 +33,10 @@ export const useQuestions = (testId: string) => {
     return useQuery({
         queryKey: questionKeys.byTest(testId),
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Questions/ByTest/{testId}',
                 path: { testId },
-                query: { page: 1, pageSize: 50 },
+                body: { page: 1, pageSize: 50 } satisfies PagedRequest,
             });
 
             if (!response.data) {

@@ -9,8 +9,8 @@ import {
     StartAttemptRequest,
     SubmitAnswerRequest,
     TestResponse,
+    PagedRequest,
     PagedResponseOfAttemptBriefResponse,
-    PostApiAttemptsStartResponses,
 } from '@/lib/api-client/types.gen';
 
 const ATTEMPTS_QUERY_KEY = ['education', 'attempts'];
@@ -23,7 +23,7 @@ export const useStartAttempt = () => {
 
     return useMutation({
         mutationFn: async (request: StartAttemptRequest) => {
-            const response = await apiClient.post<PostApiAttemptsStartResponses>({
+            const response = await apiClient.post({
                 url: '/Attempts/Start',
                 body: request,
             });
@@ -270,10 +270,10 @@ export const useAttemptsByUser = (userId: string, page = 1, pageSize = 20) => {
     return useQuery({
         queryKey: [...ATTEMPTS_QUERY_KEY, 'byUser', userId, page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Attempts/ByUser/{userId}',
                 path: { userId },
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {

@@ -8,8 +8,8 @@ import {
     CreateTestRequest,
     UpdateTestRequest,
     TestType,
+    PagedRequest,
     PagedResponseOfTestBriefResponse,
-    PostApiTestsPublishedResponses,
 } from '@/lib/api-client/types.gen';
 
 const TESTS_QUERY_KEY = ['education', 'tests'];
@@ -29,10 +29,10 @@ export const useTests = (courseId: string) => {
     return useQuery({
         queryKey: testKeys.byCourse(courseId),
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Tests/ByCourse/{courseId}',
                 path: { courseId },
-                query: { page: 1, pageSize: 50 },
+                body: { page: 1, pageSize: 50 } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -129,10 +129,10 @@ export const useTestsByLesson = (lessonId: string) => {
     return useQuery({
         queryKey: [...TESTS_QUERY_KEY, 'byLesson', lessonId],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Tests/ByLesson/{lessonId}',
                 path: { lessonId },
-                query: { page: 1, pageSize: 50 },
+                body: { page: 1, pageSize: 50 } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -149,9 +149,9 @@ export const usePublishedTests = (page = 1, pageSize = 50) => {
     return useQuery({
         queryKey: [...TESTS_QUERY_KEY, 'published', page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get<PostApiTestsPublishedResponses>({
+            const response = await apiClient.post({
                 url: '/Tests/Published',
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
