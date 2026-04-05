@@ -18,7 +18,6 @@ export default function Home() {
         activeView,
         activePanels,
         setActiveView,
-        activePopout,
     } = useNavigationStore();
 
     const handleTabChange = useCallback((tabId: ViewId) => {

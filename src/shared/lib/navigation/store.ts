@@ -8,13 +8,11 @@ import {
     type ViewId,
     type PanelId
 } from '@/shared/config/navigation';
-import React, {ReactNode} from "react";
 
 interface NavigationState {
     activeView: ViewId;
     activePanels: Record<ViewId, PanelId>;
     activeModal: string | null;
-    activePopout: ReactNode | null;
     panelHistory: Record<ViewId, PanelId[]>;
 }
 
@@ -28,8 +26,6 @@ interface NavigationStore extends NavigationState {
     openModal: (modalId: string) => void;
     closeModal: () => void;
 
-    setPopout: (popout: React.ReactNode | null) => void;
-
     clearHistory: (view: ViewId) => void;
 }
 
@@ -40,14 +36,12 @@ export const useNavigationStore = create<NavigationStore>()(
             activeView: VIEW_IDS.HOME,
             activePanels: DEFAULT_PANELS,
             activeModal: null,
-            activePopout: null,
             panelHistory: {
                 [VIEW_IDS.HOME]: [DEFAULT_PANELS[VIEW_IDS.HOME]],
                 [VIEW_IDS.SEARCH]: [DEFAULT_PANELS[VIEW_IDS.SEARCH]],
                 [VIEW_IDS.PROFILE]: [DEFAULT_PANELS[VIEW_IDS.PROFILE]],
                 [VIEW_IDS.ADMIN]: [DEFAULT_PANELS[VIEW_IDS.ADMIN]],
             },
-            selectedTenantId: null,
 
             setActiveView: (view) => {
                 set({ activeView: view });
@@ -114,10 +108,6 @@ export const useNavigationStore = create<NavigationStore>()(
 
             closeModal: () => {
                 set({ activeModal: null });
-            },
-
-            setPopout: (popout) => {
-                set({ activePopout: popout });
             },
 
             clearHistory: (view) => {

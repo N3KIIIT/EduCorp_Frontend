@@ -2,6 +2,7 @@
 
 import React, {useState} from 'react';
 import {Group, NavIdProps, Panel, PanelHeader, PanelHeaderBack, Placeholder, Tabs, TabsItem} from '@vkontakte/vkui';
+import { LoadingState } from '@/components/LoadingState/LoadingState';
 import {useTranslations} from 'next-intl';
 import {useNavigationStore} from '@/shared/lib/navigation/store';
 import {useTenant} from '../api/admin-api';
@@ -25,7 +26,7 @@ export const TenantDetailsPanel: React.FC<NavIdProps> = ({id}) => {
                 <PanelHeader before={<PanelHeaderBack onClick={goBackPanel}/>}>
                     {t('title')}
                 </PanelHeader>
-                <Placeholder>Loading tenant data...</Placeholder>
+                <LoadingState variant="panel" />
             </Panel>
         );
     }
@@ -36,7 +37,7 @@ export const TenantDetailsPanel: React.FC<NavIdProps> = ({id}) => {
                 <PanelHeader before={<PanelHeaderBack onClick={goBackPanel}/>}>
                     {t('title')}
                 </PanelHeader>
-                <Placeholder>Tenant not found</Placeholder>
+                <Placeholder>{t('notFound')}</Placeholder>
             </Panel>
         );
     }

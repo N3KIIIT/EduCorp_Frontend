@@ -4,3 +4,7 @@ export const API_CONFIG = {
     TIMEOUT: 30_000,
     REFRESH_THRESHOLD_MS: 5 * 60 * 1000,
 } as const;
+
+export const APP_CONFIG = {
+    TENANT_DOMAIN: process.env.NEXT_PUBLIC_TENANT_DOMAIN || 'example.com',
+} as const;

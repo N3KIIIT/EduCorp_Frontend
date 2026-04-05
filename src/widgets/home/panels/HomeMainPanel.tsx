@@ -1,18 +1,15 @@
 'use client';
 
-import React, {useState} from 'react';
-import { Panel, PanelHeader, } from '@vkontakte/vkui';
-import { useNavigationStore } from '@/shared/lib/navigation/store';
+import React from 'react';
+import { Panel, PanelHeader } from '@vkontakte/vkui';
+import { useTranslations } from 'next-intl';
 import { useSessionStore } from '@/entities/session/model/store';
 import { CoursesNewsTabs } from './CoursesNewsTabs';
+import { COURSE_PANEL_IDS } from "@/shared/config/navigation/panel-ids";
 
 interface Props {
     id: string
 }
-
-import { useTranslations } from 'next-intl';
-import {CourseDetailsPanel} from "@/features/education/manage-courses/ui/CourseDetailsPanel";
-import {COURSE_PANEL_IDS} from "@/shared/config/navigation/panel-ids";
 
 export const HomeMainPanel: React.FC<Props> = ({ id }) => {
     const { user } = useSessionStore();

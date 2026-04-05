@@ -18,6 +18,7 @@ import { ADMIN_PANEL_IDS } from '@/shared/config/navigation';
 import AuthGuard from "@/entities/session/lib/auth-guard";
 import {ROLES} from "@/entities/session";
 import {useAppContextStore} from "@/shared/lib/navigation/appContextStore";
+import { APP_CONFIG } from "@/shared/config/api";
 
 export const TenantManagement: React.FC = () => {
     const t = useTranslations('admin.tenants');
@@ -57,7 +58,7 @@ export const TenantManagement: React.FC = () => {
                             goToPanel(ADMIN_PANEL_IDS.DETAILS);
                         }}>
                         <InfoRow header={tenant.name}>
-                            {tenant.subdomain}.example.com ({t(`statusValues.${tenant.status}`)})
+                            {tenant.subdomain}.{APP_CONFIG.TENANT_DOMAIN} ({t(`statusValues.${tenant.status}`)})
                         </InfoRow>
                     </Cell>
                 ))
