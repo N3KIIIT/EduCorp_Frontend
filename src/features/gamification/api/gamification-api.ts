@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/base-client';
 import type {
     GamificationProfileResponse,
+    PagedRequest,
     PagedResponseOfLeaderboardEntryResponse,
 } from '@/lib/api-client/types.gen';
 
@@ -43,9 +44,9 @@ export const useLeaderboard = (page = 1, pageSize = 20) => {
     return useQuery({
         queryKey: gamificationKeys.leaderboard(page, pageSize),
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Gamification/Leaderboard',
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {

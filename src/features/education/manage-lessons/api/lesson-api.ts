@@ -8,6 +8,7 @@ import {
     LessonType,
     LessonResponse,
     LessonBriefResponse,
+    PagedRequest,
     ReorderLessonsRequest,
     PagedResponseOfLessonBriefResponse,
     GetApiLessonsByIdWithContentResponses,
@@ -27,10 +28,10 @@ export const useLessons = (courseId: string) => {
     return useQuery({
         queryKey: lessonKeys.byCourse(courseId),
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Lessons/ByCourse/{courseId}',
                 path: { courseId },
-                query: { page: 1, pageSize: 50 },
+                body: { page: 1, pageSize: 50 } satisfies PagedRequest,
             });
 
             if (!response.data) {

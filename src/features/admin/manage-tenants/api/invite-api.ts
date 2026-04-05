@@ -5,6 +5,7 @@ import {apiClient} from '@/shared/api/base-client';
 import type {
     GenerateInviteRequest,
     InviteStatus,
+    PagedRequest,
     PagedResponseOfTenantLinkResponse,
 } from '@/lib/api-client/types.gen';
 
@@ -21,10 +22,16 @@ export const useInviteLinks = (
     return useQuery({
         queryKey: [...INVITE_LINKS_QUERY_KEY, tenantId, page, pageSize, statusFilter, sortField, isDescending],
         queryFn: async () => {
-            const response = await apiClient.get<PagedResponseOfTenantLinkResponse>({
+            const body: PagedRequest = {
+                page,
+                pageSize,
+                filters: statusFilter ? [{ field: 'Status', operator: 0, value: statusFilter }] : null,
+                sorts: [{ field: sortField, isDescending }],
+            };
+            const response = await apiClient.post<PagedResponseOfTenantLinkResponse>({
                 url: '/Tenants/GetTenantInviteLinks/{tenantId}',
                 path: { tenantId },
-                query: { page, pageSize, status: statusFilter, sortField, isDescending },
+                body,
             });
 
             if (!response.data) {
@@ -47,10 +54,16 @@ export const useInfiniteInviteLinks = (
     return useInfiniteQuery<PagedResponseOfTenantLinkResponse, Error>({
         queryKey: [...INVITE_LINKS_QUERY_KEY, 'infinite', tenantId, statusFilter, sortField, isDescending],
         queryFn: async ({ pageParam = 1 }): Promise<PagedResponseOfTenantLinkResponse> => {
-            const response = await apiClient.get<PagedResponseOfTenantLinkResponse>({
+            const body: PagedRequest = {
+                page: pageParam as number,
+                pageSize,
+                filters: statusFilter ? [{ field: 'Status', operator: 0, value: statusFilter }] : null,
+                sorts: [{ field: sortField, isDescending }],
+            };
+            const response = await apiClient.post<PagedResponseOfTenantLinkResponse>({
                 url: '/Tenants/GetTenantInviteLinks/{tenantId}',
                 path: { tenantId },
-                query: { page: pageParam as number, pageSize, status: statusFilter, sortField, isDescending },
+                body,
             });
 
             if (!response.data) {

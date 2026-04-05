@@ -8,6 +8,7 @@ import {
     AddContentBlockRequest,
     UpdateContentBlockRequest,
     IContentBlockDataRequest,
+    PagedRequest,
     ReorderContentBlocksRequest,
     UploadMediaContentCommand,
     GetMediaLibraryQuery,
@@ -32,10 +33,10 @@ export const useContentBlocks = (lessonId: string) => {
     return useQuery({
         queryKey: contentBlockKeys.byLesson(lessonId),
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/ContentBlocks/ByLesson/{lessonId}',
                 path: { lessonId },
-                query: { page: 1, pageSize: 50 },
+                body: { page: 1, pageSize: 50 } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -130,10 +131,10 @@ export const useContentBlocksByCourse = (courseId: string) => {
     return useQuery({
         queryKey: [...CONTENT_BLOCKS_QUERY_KEY, 'byCourse', courseId],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/ContentBlocks/ByCourse/{courseId}',
                 path: { courseId },
-                query: { page: 1, pageSize: 100 },
+                body: { page: 1, pageSize: 100 } satisfies PagedRequest,
             });
 
             if (!response.data) {

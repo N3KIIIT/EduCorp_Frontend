@@ -6,6 +6,7 @@ import type {
     AssignRoleRequest,
     ConsumeTenantInviteCommand,
     CreateTenantRequest,
+    PagedRequest,
     PostApiTenantsGetAllResponses,
     PostApiTenantsResponse,
     RoleResponse,
@@ -19,9 +20,9 @@ export const useTenants = () => {
     return useQuery({
         queryKey: TENANTS_QUERY_KEY,
         queryFn: async () => {
-            const response = await apiClient.get<PostApiTenantsGetAllResponses>({
+            const response = await apiClient.post<PostApiTenantsGetAllResponses>({
                 url: '/Tenants/GetAll',
-                query: { page: 1, pageSize: 100 },
+                body: { page: 1, pageSize: 100 } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -60,8 +61,8 @@ export const useTenant = (tenantId: string) => {
         queryKey: [...TENANTS_QUERY_KEY, tenantId],
         queryFn: async () => {
             const response = await apiClient.get<TenantGeneralResponse>({
-                url: '/Tenants/{id}',
-                path: { id: tenantId },
+                url: '/Tenants/{tenantId}',
+                path: { tenantId },
             });
 
             if (!response.data) {

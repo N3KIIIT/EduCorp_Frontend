@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/base-client';
 import type {
     CourseProgressResponse,
+    PagedRequest,
     PagedResponseOfCourseProgressResponse,
     StartCourseCommand,
     ContinueCourseCommand,
@@ -221,9 +222,9 @@ export const useUserCourseProgress = (page = 1, pageSize = 20) => {
     return useQuery({
         queryKey: [...progressKeys.user, page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/CoursesProgress/User',
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {

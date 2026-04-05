@@ -237,10 +237,10 @@ export const useCoursesByAuthor = (authorId: string, page = 1, pageSize = 50) =>
     return useQuery({
         queryKey: [...COURSES_QUERY_KEY, 'byAuthor', authorId, page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Courses/ByAuthor/{authorId}',
                 path: { authorId },
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -257,10 +257,10 @@ export const useCoursesByCategory = (categoryId: string, page = 1, pageSize = 50
     return useQuery({
         queryKey: [...COURSES_QUERY_KEY, 'byCategory', categoryId, page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Courses/ByCategory/{categoryId}',
                 path: { categoryId },
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -277,10 +277,10 @@ export const useCoursesByTag = (tag: string, page = 1, pageSize = 50) => {
     return useQuery({
         queryKey: [...COURSES_QUERY_KEY, 'byTag', tag, page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Courses/ByTag/{tag}',
                 path: { tag },
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -297,9 +297,9 @@ export const usePublicCourses = (page = 1, pageSize = 50) => {
     return useQuery({
         queryKey: [...COURSES_QUERY_KEY, 'public', page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Courses/Public',
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
@@ -315,9 +315,9 @@ export const usePublishedCourses = (page = 1, pageSize = 50) => {
     return useQuery({
         queryKey: [...COURSES_QUERY_KEY, 'published', page, pageSize],
         queryFn: async () => {
-            const response = await apiClient.get({
+            const response = await apiClient.post({
                 url: '/Courses/Published',
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
