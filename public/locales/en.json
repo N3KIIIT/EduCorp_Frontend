@@ -324,7 +324,9 @@
         "hideHint": "Hide Hint",
         "selectMatch": "Select match",
         "fillBlankPlaceholder": "Type your answer",
-        "unsupportedType": "Unsupported question type"
+        "unsupportedType": "Unsupported question type",
+        "questionBreakdown": "Question Breakdown",
+        "questionLabel": "Question"
       }
     },
     "questions": {

@@ -524,6 +524,84 @@
     gap: 8px;
 }
 
+/* --- Results Breakdown --- */
+.resultsBreakdown {
+    padding: 0 24px 8px;
+    border-top: 1px solid var(--vkui--color_separator_primary);
+}
+
+.resultsBreakdownTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--vkui--color_text_secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 16px 0 10px;
+}
+
+.resultsQuestionRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    background: var(--vkui--color_background_secondary);
+}
+
+.resultsQuestionRow.qCorrect {
+    background: rgba(76, 175, 80, 0.08);
+    border: 1px solid rgba(76, 175, 80, 0.25);
+}
+
+.resultsQuestionRow.qPartial {
+    background: rgba(255, 152, 0, 0.08);
+    border: 1px solid rgba(255, 152, 0, 0.25);
+}
+
+.resultsQuestionRow.qWrong {
+    background: rgba(244, 67, 54, 0.08);
+    border: 1px solid rgba(244, 67, 54, 0.25);
+}
+
+.resultsQuestionRow.qUnanswered {
+    opacity: 0.6;
+}
+
+.resultsQuestionStatus {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.qCorrect .resultsQuestionStatus { color: #4caf50; }
+.qPartial .resultsQuestionStatus { color: #ff9800; }
+.qWrong .resultsQuestionStatus   { color: #f44336; }
+.qUnanswered .resultsQuestionStatus { color: var(--vkui--color_text_tertiary); }
+
+.resultsQuestionText {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--vkui--color_text_primary);
+}
+
+.resultsQuestionScore {
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--vkui--color_text_secondary);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
 /* --- Slide Transitions --- */
 .questionSlideEnter {
     animation: slideIn 0.3s ease-out;

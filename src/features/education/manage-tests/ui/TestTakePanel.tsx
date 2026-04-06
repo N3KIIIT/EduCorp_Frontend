@@ -7,7 +7,7 @@ import { Icon24DoneOutline, Icon24ErrorCircleOutline } from '@vkontakte/icons';
 import { useTranslations } from 'next-intl';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
-import { useAttemptWithAnswers, useTestWithQuestions, useActiveAttempt } from '../api/attempt-api';
+import { useAttemptWithAnswers, useAttemptResult, useTestWithQuestions, useActiveAttempt } from '../api/attempt-api';
 import { useTestAttempt } from './hooks/useTestAttempt';
 import { useTestTimer } from './hooks/useTestTimer';
 import { TestStartScreen } from './TestStartScreen';
@@ -78,9 +78,9 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
     const timeLimitSeconds = test?.timeLimitSeconds ? Number(test.timeLimitSeconds) : null;
     const timerSeconds = useTestTimer(timeLimitSeconds, handleComplete, isCompleted);
 
-    const attemptResultsQuery = useAttemptWithAnswers(
-        isCompleted && currentAttemptId ? currentAttemptId : '',
-    );
+    const completedAttemptId = isCompleted && currentAttemptId ? currentAttemptId : '';
+    const attemptResultsQuery = useAttemptWithAnswers(completedAttemptId);
+    const attemptResultQuery = useAttemptResult(completedAttemptId);
 
     if (testQuery.isLoading || activeAttemptQuery.isLoading) {
         return (
@@ -98,9 +98,10 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
             <>
                 <TestResultsScreen
                     id={id}
-                    result={attemptResultsQuery.data}
+                    attempt={attemptResultsQuery.data}
+                    attemptResult={attemptResultQuery.data}
+                    questions={questions}
                     answeredCount={Object.keys(answers).length}
-                    totalQuestions={questions.length}
                     onBack={goBackPanel}
                 />
                 {snackbar}

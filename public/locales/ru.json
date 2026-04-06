@@ -327,7 +327,9 @@
         "hideHint": "Скрыть подсказку",
         "selectMatch": "Выберите пару",
         "fillBlankPlaceholder": "Введите ответ",
-        "unsupportedType": "Неподдерживаемый тип вопроса"
+        "unsupportedType": "Неподдерживаемый тип вопроса",
+        "questionBreakdown": "Результаты по вопросам",
+        "questionLabel": "Вопрос"
       }
     },
     "questions": {
