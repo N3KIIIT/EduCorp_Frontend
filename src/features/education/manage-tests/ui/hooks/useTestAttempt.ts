@@ -32,6 +32,15 @@ export function useTestAttempt({
 
     const { currentAttemptId, setCurrentAttemptId } = useAppContextStore();
 
+    // Always start fresh — clear any leftover attempt ID from a previous session
+    useEffect(() => {
+        setCurrentAttemptId(null);
+        setCurrentQuestionIndex(0);
+        setAnswers({});
+        setIsCompleted(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [testId]);
+
     const startAttemptMutation = useStartAttempt();
     const submitAnswerMutation = useSubmitAnswer();
     const completeAttemptMutation = useCompleteAttempt();

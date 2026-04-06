@@ -7,7 +7,7 @@ import { Icon24DoneOutline, Icon24ErrorCircleOutline } from '@vkontakte/icons';
 import { useTranslations } from 'next-intl';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
-import { useAttemptWithAnswers, useAttemptResult, useTestWithQuestions, useActiveAttempt } from '../api/attempt-api';
+import { useAttemptWithAnswers, useAttemptResult, useTestWithQuestions } from '../api/attempt-api';
 import { useTestAttempt } from './hooks/useTestAttempt';
 import { useTestTimer } from './hooks/useTestTimer';
 import { TestStartScreen } from './TestStartScreen';
@@ -28,7 +28,6 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
     const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
 
     const testQuery = useTestWithQuestions(currentTestId ?? '');
-    const activeAttemptQuery = useActiveAttempt(currentTestId ?? '');
 
     const test = testQuery.data;
     const questions: QuestionResponse[] = useMemo(() => test?.questions ?? [], [test]);
@@ -82,7 +81,7 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
     const attemptResultsQuery = useAttemptWithAnswers(completedAttemptId);
     const attemptResultQuery = useAttemptResult(completedAttemptId);
 
-    if (testQuery.isLoading || activeAttemptQuery.isLoading) {
+    if (testQuery.isLoading) {
         return (
             <Panel id={id}>
                 <PanelHeader before={<PanelHeaderBack onClick={goBackPanel} />}>
