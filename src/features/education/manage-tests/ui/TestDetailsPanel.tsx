@@ -123,6 +123,12 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                             >
                                 {t('takeTestTab')}
                             </TabsItem>
+                            <TabsItem
+                                selected={false}
+                                onClick={() => goToPanel(TEST_PANEL_IDS.ATTEMPTS)}
+                            >
+                                {t('attemptsTab')}
+                            </TabsItem>
                         </Tabs>
                     </Group>
 

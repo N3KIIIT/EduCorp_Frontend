@@ -8,6 +8,8 @@ import { CourseDetailsPanel } from "@/features/education/manage-courses/ui/Cours
 import { LessonDetailsPanel } from "@/features/education/manage-lessons/ui/LessonDetailsPanel";
 import { TestDetailsPanel } from "@/features/education/manage-tests/ui/TestDetailsPanel";
 import { TestTakePanel } from "@/features/education/manage-tests/ui/TestTakePanel";
+import { AttemptsHistoryPanel } from "@/features/education/manage-tests/ui/AttemptsHistoryPanel";
+import { AttemptReviewPanel } from "@/features/education/manage-tests/ui/AttemptReviewPanel";
 import { COURSE_PANEL_IDS, LESSON_PANEL_IDS, TEST_PANEL_IDS } from "@/shared/config/navigation/panel-ids";
 import { VIEW_IDS, HOME_PANEL_IDS } from '@/shared/config/navigation';
 
@@ -31,6 +33,8 @@ export const HomeView: React.FC<Props> = ({ id }) => {
             <LessonDetailsPanel id={LESSON_PANEL_IDS.DETAIL} />
             <TestDetailsPanel id={TEST_PANEL_IDS.DETAIL} />
             <TestTakePanel id={TEST_PANEL_IDS.TAKE} />
+            <AttemptsHistoryPanel id={TEST_PANEL_IDS.ATTEMPTS} />
+            <AttemptReviewPanel id={TEST_PANEL_IDS.ATTEMPT_REVIEW} />
         </View>
     );
 };

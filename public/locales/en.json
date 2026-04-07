@@ -244,6 +244,27 @@
       "minutes": "min",
       "questionsTab": "Questions",
       "takeTestTab": "Take Test",
+      "attemptsTab": "Attempts",
+      "attempts": {
+        "title": "My Attempts",
+        "reviewTitle": "Attempt Review",
+        "noAttempts": "No attempts yet",
+        "errorLoading": "Error loading attempts",
+        "filterAll": "All",
+        "filterPassed": "Passed",
+        "filterFailed": "Failed",
+        "filterInProgress": "In Progress",
+        "statusPassed": "Passed",
+        "statusFailed": "Failed",
+        "statusInProgress": "In Progress",
+        "statusUnknown": "Unknown",
+        "score": "Score",
+        "duration": "Duration",
+        "yourAnswer": "Your answer",
+        "correctAnswer": "Correct answer",
+        "acceptableAnswers": "Acceptable answers",
+        "unsupportedType": "Unsupported question type"
+      },
       "takeTestInstructions": "Test Instructions",
       "takeTestDescription": "Click the button below to start the test. You will have a limited time to answer all questions.",
       "startTest": "Start Test",
@@ -326,7 +347,10 @@
         "fillBlankPlaceholder": "Type your answer",
         "unsupportedType": "Unsupported question type",
         "questionBreakdown": "Question Breakdown",
-        "questionLabel": "Question"
+        "questionLabel": "Question",
+        "yourAnswer": "Your answer",
+        "correctAnswer": "Correct answer",
+        "acceptableAnswers": "Acceptable answers"
       }
     },
     "questions": {

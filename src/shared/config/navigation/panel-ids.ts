@@ -63,6 +63,8 @@ export const TEST_PANEL_IDS = {
     MAIN: 'test-main',
     DETAIL: 'test-details',
     TAKE: 'test-take',
+    ATTEMPTS: 'test-attempts',
+    ATTEMPT_REVIEW: 'test-attempt-review',
 } as const;
 export type TestPanelId = typeof TEST_PANEL_IDS[keyof typeof TEST_PANEL_IDS]
 

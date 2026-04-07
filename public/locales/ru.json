@@ -247,6 +247,27 @@
       "minutes": "мин",
       "questionsTab": "Вопросы",
       "takeTestTab": "Пройти тест",
+      "attemptsTab": "Попытки",
+      "attempts": {
+        "title": "Мои попытки",
+        "reviewTitle": "Разбор попытки",
+        "noAttempts": "Попыток ещё нет",
+        "errorLoading": "Ошибка загрузки попыток",
+        "filterAll": "Все",
+        "filterPassed": "Сдано",
+        "filterFailed": "Не сдано",
+        "filterInProgress": "В процессе",
+        "statusPassed": "Сдано",
+        "statusFailed": "Не сдано",
+        "statusInProgress": "В процессе",
+        "statusUnknown": "Неизвестно",
+        "score": "Балл",
+        "duration": "Длительность",
+        "yourAnswer": "Ваш ответ",
+        "correctAnswer": "Правильный ответ",
+        "acceptableAnswers": "Допустимые ответы",
+        "unsupportedType": "Неподдерживаемый тип вопроса"
+      },
       "takeTestInstructions": "Инструкции",
       "takeTestDescription": "Вам предстоит пройти тест. Внимательно читайте вопросы! Если есть ограничение по времени, таймер будет показан вверху.",
       "startTest": "Начать тест",
@@ -329,7 +350,10 @@
         "fillBlankPlaceholder": "Введите ответ",
         "unsupportedType": "Неподдерживаемый тип вопроса",
         "questionBreakdown": "Результаты по вопросам",
-        "questionLabel": "Вопрос"
+        "questionLabel": "Вопрос",
+        "yourAnswer": "Ваш ответ",
+        "correctAnswer": "Правильный ответ",
+        "acceptableAnswers": "Допустимые ответы"
       }
     },
     "questions": {

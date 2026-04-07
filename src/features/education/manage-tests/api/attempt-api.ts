@@ -258,7 +258,7 @@ export const useAttemptsByTest = (testId: string, page = 1, pageSize = 20) => {
             const response = await apiClient.get({
                 url: '/Attempts/ByTest/{testId}',
                 path: { testId },
-                query: { page, pageSize },
+                body: { page, pageSize } satisfies PagedRequest,
             });
 
             if (!response.data) {
