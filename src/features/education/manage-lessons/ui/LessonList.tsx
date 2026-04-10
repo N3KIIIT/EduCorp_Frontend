@@ -1,13 +1,10 @@
 'use client';
 
 import React from 'react';
- import {List, Button, Caption, Headline, Chip, Card, CardGrid, Div, Group, Box, ModalRoot} from '@vkontakte/vkui';
+import { Button, Group } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useLessons, useDeleteLesson } from '../api/lesson-api';
-import type { LessonBriefResponse } from '@/lib/api-client/types.gen';
-import {CourseCreateModal} from "@/features/education/manage-courses/ui/CourseCreateModal";
-import {LessonCreateModal} from "@/features/education/manage-lessons/ui/LessonCreateModal";
-import {useNavigationStore} from "@/shared/lib/navigation/store";
+import '@/features/education/education.css';
 
 interface LessonListProps {
     courseId: string;
@@ -15,10 +12,22 @@ interface LessonListProps {
     onSelectLesson?: (lessonId: string) => void;
 }
 
+function getLessonTypeEmoji(lessonType: string): string {
+    switch (lessonType?.toLowerCase()) {
+        case 'video': return '🎬';
+        case 'text': case 'article': return '📄';
+        case 'quiz': case 'test': return '📝';
+        case 'practice': return '💪';
+        case 'interactive': return '🎮';
+        default: return '📖';
+    }
+}
+
 export const LessonList: React.FC<LessonListProps> = ({ courseId, onEditLesson, onSelectLesson }) => {
     const t = useTranslations('education.lessons');
     const lessonsQuery = useLessons(courseId);
     const deleteLesson = useDeleteLesson();
+
     const handleDeleteLesson = async (lessonId: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (confirm(t('confirmDelete'))) {
@@ -30,74 +39,81 @@ export const LessonList: React.FC<LessonListProps> = ({ courseId, onEditLesson, 
         }
     };
 
-    const handleSelectLesson = (lessonId: string) => {
-        onSelectLesson?.(lessonId);
-    };
-
     if (lessonsQuery.isLoading) {
-        return <Caption>{t('loading')}</Caption>;
+        return (
+            <div style={{ padding: '8px 16px' }}>
+                {[0, 1, 2].map((i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0' }}>
+                        <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--vkui--color_separator_primary)', flexShrink: 0, animation: 'skeletonPulse 1.5s ease-in-out infinite' }} />
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            <div style={{ height: 14, borderRadius: 7, background: 'var(--vkui--color_separator_primary)', width: '70%', animation: 'skeletonPulse 1.5s ease-in-out infinite' }} />
+                            <div style={{ height: 11, borderRadius: 6, background: 'var(--vkui--color_separator_primary)', width: '45%', animation: 'skeletonPulse 1.5s ease-in-out infinite' }} />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     if (lessonsQuery.error) {
-        return <Caption>{t('errorLoading')}</Caption>;
+        return (
+            <div className="eduEmpty">
+                <div className="eduEmptyIcon">⚠️</div>
+                <div className="eduEmptyText">{t('errorLoading')}</div>
+            </div>
+        );
     }
 
     if (!lessonsQuery.data || lessonsQuery.data.length === 0) {
-        return <Caption>{t('noLessons')}</Caption>;
+        return (
+            <div className="eduEmpty">
+                <div className="eduEmptyIcon">📖</div>
+                <div className="eduEmptyText">{t('noLessons')}</div>
+            </div>
+        );
     }
-
 
     return (
         <Group>
-            <List>
-                {lessonsQuery.data.map((lesson) => (
-                    <Card
-                        key={lesson.id}
-                        mode="shadow"
-                        onClick={() => handleSelectLesson(lesson.id)}
-                        style={{ margin: 8, cursor: 'pointer' }}
-                    >
-                        <Box style={{ padding: 12 }}>
-                            <CardGrid>
-                                <div style={{ flex: 1 }}>
-                                    <Headline level="1" weight="2">
-                                        {lesson.orderIndex}. {lesson.title}
-                                    </Headline>
-                                    <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-                                        <Chip>
-                                            {t(`lessonType.${lesson.lessonType}`)}
-                                        </Chip>
-                                        {lesson.estimatedDurationMinutes && (
-                                            <Chip>
-                                                {lesson.estimatedDurationMinutes} {t('minutes')}
-                                            </Chip>
-                                        )}
-                                    </div>
-                                </div>
-                            </CardGrid>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 6, marginTop: 8 }}>
-                                <Button
-                                    size="s"
-                                    mode="tertiary"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEditLesson?.(lesson.id);
-                                    }}
-                                >
+            {lessonsQuery.data.map((lesson, idx) => {
+                const colorVariant = idx % 8;
+                const emoji = getLessonTypeEmoji(lesson.lessonType);
+
+                return (
+                    <div key={lesson.id} className="lessonRow" onClick={() => onSelectLesson?.(lesson.id)}>
+                        {/* Numbered index circle */}
+                        <div className={`lessonIndex lessonIndex--${colorVariant}`}>
+                            {Number(lesson.orderIndex)}
+                        </div>
+
+                        {/* Title + subtitle */}
+                        <div className="lessonContent">
+                            <div className="lessonTitle">{lesson.title}</div>
+                            <div className="lessonSubtitle">
+                                <span>{emoji} {t(`lessonType.${lesson.lessonType}`)}</span>
+                                {lesson.estimatedDurationMinutes && (
+                                    <>
+                                        <span className="lessonTypeDot" />
+                                        <span>{lesson.estimatedDurationMinutes} {t('minutes')}</span>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="lessonRowActions" onClick={(e) => e.stopPropagation()}>
+                            {onEditLesson && (
+                                <Button size="s" mode="tertiary" onClick={() => onEditLesson(lesson.id)}>
                                     {t('edit')}
                                 </Button>
-                                <Button
-                                    size="s"
-                                    mode="tertiary"
-                                    onClick={(e) => handleDeleteLesson(lesson.id, e)}
-                                >
-                                    {t('delete')}
-                                </Button>
-                            </div>
-                        </Box>
-                    </Card>
-                ))}
-            </List>
+                            )}
+                            <Button size="s" mode="tertiary" onClick={(e) => handleDeleteLesson(lesson.id, e)}>
+                                {t('delete')}
+                            </Button>
+                        </div>
+                    </div>
+                );
+            })}
         </Group>
     );
 };

@@ -8,16 +8,11 @@ import {
     Panel,
     PanelHeader,
     PanelHeaderBack,
-    Title,
     Tabs,
     TabsItem,
     Div,
-    Headline,
+    Title,
     Caption,
-    Card,
-    CardGrid,
-    Box,
-    Chip,
 } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
@@ -28,10 +23,28 @@ import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
 import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
 import { ROLES } from '@/entities/session';
 import { TEST_PANEL_IDS } from '@/shared/config/navigation/panel-ids';
-import './test-take.css';
+import '@/features/education/education.css';
 
 interface TestDetailsPanelProps {
     id: string;
+}
+
+function getTestVariant(title: string): number {
+    let hash = 0;
+    for (let i = 0; i < title.length; i++) {
+        hash = (hash * 31 + title.charCodeAt(i)) & 0xffffffff;
+    }
+    return Math.abs(hash) % 8;
+}
+
+function getTestTypeEmoji(type: string): string {
+    switch (type?.toLowerCase()) {
+        case 'quiz': return '🧠';
+        case 'practice': return '💪';
+        case 'exam': return '🎓';
+        case 'survey': return '📊';
+        default: return '📝';
+    }
 }
 
 export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
@@ -46,16 +59,14 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
         <ModalRoot activeModal={activeModal} onClose={closeModal}>
             <QuestionCreateModal
                 testId={currentTestId!}
-                onClose={() => {
-                    closeModal();
-                }}
+                onClose={closeModal}
             />
         </ModalRoot>
     );
 
-    const handleStartTest = () => {
-        goToPanel(TEST_PANEL_IDS.TAKE);
-    };
+    const test = testQuery.data;
+    const variant = test ? getTestVariant(t(`testType.${test.type}`)) : 0;
+    const emoji = test ? getTestTypeEmoji(test.type) : '📝';
 
     return (
         <Panel id={id}>
@@ -73,43 +84,37 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                         </Button>
                     </PermissionGuard>
                 }
+                transparent
             >
-                {testQuery.data ? t(`testType.${testQuery.data.type}`) : t('details')}
+                {test ? t(`testType.${test.type}`) : t('details')}
             </PanelHeader>
 
-            {testQuery.isLoading && <Title level="2">{t('loading')}</Title>}
-            {testQuery.error && <Title level="2">{t('errorLoading')}</Title>}
-            {testQuery.data && (
+            {test && (
                 <>
-                    <Group>
-                        <Card mode="shadow">
-                            <Box style={{ padding: 12 }}>
-                                <Headline level="1" weight="2">
-                                    {t(`testType.${testQuery.data.type}`)}
-                                </Headline>
-                                <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-                                    <Chip>{t(`testType.${testQuery.data.type}`)}</Chip>
-                                    {testQuery.data.passingScore && (
-                                        <Chip>
-                                            {t('passingScore')}: {testQuery.data.passingScore}%
-                                        </Chip>
-                                    )}
-                                    {testQuery.data.timeLimitSeconds && (
-                                        <Chip>
-                                            {t('duration')}: {Math.round(Number(testQuery.data.timeLimitSeconds) / 60)} {t('minutes')}
-                                        </Chip>
-                                    )}
-                                    {testQuery.data.questions?.length > 0 && (
-                                        <Chip>
-                                            {testQuery.data.questions.length} {t('questions')}
-                                        </Chip>
-                                    )}
-                                </div>
-                            </Box>
-                        </Card>
-                    </Group>
+                    {/* Hero banner */}
+                    <div className={`heroHero heroHero--${variant}`}>
+                        <div className="heroTitle">{emoji} {t(`testType.${test.type}`)}</div>
+                        <div className="heroMeta">
+                            {test.passingScore && (
+                                <span className="heroBadge">
+                                    {t('passingScore')}: {test.passingScore}%
+                                </span>
+                            )}
+                            {test.timeLimitSeconds && (
+                                <span className="heroBadge">
+                                    ⏱ {Math.round(Number(test.timeLimitSeconds) / 60)} {t('minutes')}
+                                </span>
+                            )}
+                            {test.questions?.length > 0 && (
+                                <span className="heroBadge">
+                                    {test.questions.length} {t('questions')}
+                                </span>
+                            )}
+                        </div>
+                    </div>
 
-                    <Group>
+                    {/* Tabs */}
+                    <Group style={{ marginTop: 12 }}>
                         <Tabs>
                             <TabsItem
                                 selected={activeTab === 'questions'}
@@ -151,7 +156,7 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                                 size="l"
                                 mode="primary"
                                 style={{ marginTop: 16, width: '100%' }}
-                                onClick={handleStartTest}
+                                onClick={() => goToPanel(TEST_PANEL_IDS.TAKE)}
                             >
                                 {t('startTest')}
                             </Button>

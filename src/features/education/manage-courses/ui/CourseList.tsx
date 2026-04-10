@@ -1,18 +1,92 @@
 'use client';
 
 import React from 'react';
-import {Button, Caption, Headline, CardScroll, Card, SimpleCell} from '@vkontakte/vkui';
+import { Button } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useCourses, useDeleteCourse } from '../api/course-api';
 import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
 import type { CourseBriefResponse } from '@/lib/api-client/types.gen';
-import {ROLES} from "@/entities/session";
+import { ROLES } from '@/entities/session';
+import '@/features/education/education.css';
 
 interface CourseListProps {
     tenantId?: string;
     onEditCourse?: (courseId: string) => void;
     onViewCourse: (courseId: string) => void;
 }
+
+function getCoverVariant(title: string): number {
+    let hash = 0;
+    for (let i = 0; i < title.length; i++) {
+        hash = (hash * 31 + title.charCodeAt(i)) & 0xffffffff;
+    }
+    return Math.abs(hash) % 8;
+}
+
+function formatDate(dateStr: string): string {
+    try {
+        return new Date(dateStr).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+    } catch {
+        return '';
+    }
+}
+
+interface CourseCardProps {
+    course: CourseBriefResponse;
+    onView: () => void;
+    onEdit?: () => void;
+    onDelete: (e: React.MouseEvent) => void;
+    t: ReturnType<typeof useTranslations>;
+}
+
+const CourseCard: React.FC<CourseCardProps> = ({ course, onView, onEdit, onDelete, t }) => {
+    const variant = getCoverVariant(course.title);
+
+    return (
+        <div className="courseCard" onClick={onView} role="button" tabIndex={0}>
+            {/* Gradient cover */}
+            <div className={`courseCover courseCover--${variant}`}>
+                <span className="courseCoverLetter">{course.title.charAt(0)}</span>
+            </div>
+
+            {/* Card body */}
+            <div className="courseCardBody">
+                <div className="courseTitle">{course.title}</div>
+
+                {course.description && (
+                    <div className="courseDescription">{course.description}</div>
+                )}
+
+                <div className="courseCardMeta">
+                    <span className="courseMetaBadge">
+                        {course.isPublic ? t('public') : t('private')}
+                    </span>
+                    {course.createdAt && (
+                        <span className="courseMetaBadge">{formatDate(course.createdAt)}</span>
+                    )}
+                </div>
+
+                {/* Progress bar — placeholder until progress API is integrated */}
+                <div className="eduProgressBar">
+                    <div className="eduProgressFill" style={{ width: '0%' }} />
+                </div>
+
+                <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
+                    <div className="courseCardActions" onClick={(e) => e.stopPropagation()}>
+                        {onEdit && (
+                            <Button size="s" mode="secondary" onClick={onEdit}>
+                                {t('edit')}
+                            </Button>
+                        )}
+                        <Button size="s" mode="destructive" onClick={onDelete}>
+                            {t('delete')}
+                        </Button>
+                    </div>
+                </PermissionGuard>
+            </div>
+        </div>
+    );
+};
 
 export const CourseList: React.FC<CourseListProps> = ({ tenantId, onEditCourse, onViewCourse }) => {
     const t = useTranslations('education.courses');
@@ -30,70 +104,52 @@ export const CourseList: React.FC<CourseListProps> = ({ tenantId, onEditCourse, 
         }
     };
 
-    const handleViewDetails = (course: CourseBriefResponse) => {
-        onViewCourse(course.id);
-        console.log('Selected course:', course);
-    };
-
     if (coursesQuery.isLoading) {
-        return <Caption>{t('loading')}</Caption>;
+        return (
+            <div className="courseGrid">
+                {[0, 1, 2, 3].map((i) => (
+                    <div key={i} className="skeletonCard">
+                        <div className="skeletonCover" />
+                        <div className="skeletonBody">
+                            <div className="skeletonLine skeletonLine--medium" />
+                            <div className="skeletonLine skeletonLine--short" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     if (coursesQuery.error) {
-        const errMsg = coursesQuery.error instanceof Error
-            ? coursesQuery.error.message
-            : String(coursesQuery.error);
-        console.error('[CourseList] Error loading courses:', coursesQuery.error);
-        return <Caption>{t('errorLoading')}: {errMsg}</Caption>;
+        return (
+            <div className="eduEmpty">
+                <div className="eduEmptyIcon">⚠️</div>
+                <div className="eduEmptyText">{t('errorLoading')}</div>
+            </div>
+        );
     }
 
     if (!coursesQuery.data || coursesQuery.data.length === 0) {
-        return <Caption>{t('noCourses')}</Caption>;
+        return (
+            <div className="eduEmpty">
+                <div className="eduEmptyIcon">📚</div>
+                <div className="eduEmptyText">{t('noCourses')}</div>
+            </div>
+        );
     }
-    
+
     return (
-        <CardScroll size="l" style={{ padding: 12, gap: 12}}>
+        <div className="courseGrid">
             {coursesQuery.data.map((course) => (
-                <Card key={course.id} mode="outline" style={{ minWidth: 280, maxWidth: 320 }}>
-                    <SimpleCell
-                        disabled={!onViewCourse}
-                        onClick={() => handleViewDetails(course)}
-                        style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}
-                    >
-                        <Headline weight="2" style={{ marginBottom: 8, textAlign: 'left' }}>
-                            {course.title}
-                        </Headline>
-
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                            <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
-                                <Button
-                                    size="s"
-                                    mode="tertiary"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEditCourse?.(course.id);
-                                    }}
-                                    Component="span"
-                                >
-                                    {t('edit')}
-                                </Button>
-                            </PermissionGuard>
-
-                            <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
-                                <Button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteCourse(course.id, e);
-                                    }}
-                                    style={{ fontSize: 14, color: 'var(--vkui--color_text_secondary)' }}
-                                >
-                                    {t('delete')}
-                                </Button>
-                            </PermissionGuard>
-                        </div>
-                    </SimpleCell>
-                </Card>
+                <CourseCard
+                    key={course.id}
+                    course={course}
+                    onView={() => onViewCourse(course.id)}
+                    onEdit={onEditCourse ? () => onEditCourse(course.id) : undefined}
+                    onDelete={(e) => handleDeleteCourse(course.id, e)}
+                    t={t}
+                />
             ))}
-        </CardScroll>
+        </div>
     );
 };
