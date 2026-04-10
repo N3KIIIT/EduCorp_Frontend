@@ -1,29 +1,22 @@
 'use client';
 
 import React from 'react';
-import {
-    List,
-    Button,
-    Caption,
-    Headline,
-    Chip,
-    Card,
-    CardGrid,
-    Box,
-    Group,
-    Div,
-} from '@vkontakte/vkui';
+import { Button, Group } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useQuestions, useDeleteQuestion } from '../api/question-api';
-import type { QuestionBriefResponse } from '@/lib/api-client/types.gen';
+import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
+import { ROLES } from '@/entities/session';
+import '@/features/education/education.css';
 
 interface QuestionListProps {
     testId: string;
     onEditQuestion?: (questionId: string) => void;
+    onStartTest?: () => void;
 }
 
-export const QuestionList: React.FC<QuestionListProps> = ({ testId, onEditQuestion }) => {
+export const QuestionList: React.FC<QuestionListProps> = ({ testId, onEditQuestion, onStartTest }) => {
     const t = useTranslations('education.questions');
+    const tTests = useTranslations('education.tests');
     const questionsQuery = useQuestions(testId);
     const deleteQuestion = useDeleteQuestion();
 
@@ -38,79 +31,88 @@ export const QuestionList: React.FC<QuestionListProps> = ({ testId, onEditQuesti
         }
     };
 
-    const getQuestionTypeLabel = (type: string): string => {
-        const typeLabels: Record<string, string> = {
-            'SingleChoice': t('type.singleChoice'),
-            'MultipleChoice': t('type.multipleChoice'),
-            'Text': t('type.text'),
-            'Numeric': t('type.numeric'),
-            'Matching': t('type.matching'),
-            'Ordering': t('type.ordering'),
-            'FillInTheBlank': t('type.fillInTheBlank'),
-        };
-        return typeLabels[type] || type;
-    };
+    const startTestLabel = tTests('startTest');
 
     if (questionsQuery.isLoading) {
-        return <Caption>{t('loading')}</Caption>;
+        return (
+            <div style={{ padding: '8px 16px' }}>
+                {[0, 1, 2].map((i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0' }}>
+                        <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--vkui--color_separator_primary)', flexShrink: 0, animation: 'skeletonPulse 1.5s ease-in-out infinite' }} />
+                        <div style={{ height: 14, borderRadius: 7, background: 'var(--vkui--color_separator_primary)', flex: 1, animation: 'skeletonPulse 1.5s ease-in-out infinite' }} />
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     if (questionsQuery.error) {
-        return <Caption>{t('errorLoading')}</Caption>;
+        return (
+            <div className="eduEmpty">
+                <div className="eduEmptyIcon">⚠️</div>
+                <div className="eduEmptyText">{t('errorLoading')}</div>
+            </div>
+        );
     }
 
     if (!questionsQuery.data || questionsQuery.data.length === 0) {
-        return <Caption>{t('noQuestions')}</Caption>;
+        return (
+            <>
+                <div className="eduEmpty">
+                    <div className="eduEmptyIcon">❓</div>
+                    <div className="eduEmptyText">{t('noQuestions')}</div>
+                </div>
+                {onStartTest && (
+                    <div style={{ padding: '8px 16px 24px' }}>
+                        <Button size="l" stretched mode="primary" onClick={onStartTest}>
+                            {startTestLabel}
+                        </Button>
+                    </div>
+                )}
+            </>
+        );
     }
 
     return (
-        <Group>
-            <List>
-                {questionsQuery.data.map((question, index) => (
-                    <Card
-                        key={question.id}
-                        mode="shadow"
-                        style={{ margin: 8 }}
-                    >
-                        <Box style={{ padding: 12 }}>
-                            <CardGrid>
-                                <div style={{ flex: 1 }}>
-                                    <Headline level="2" weight="2">
-                                        {index + 1}. {question.id}
-                                    </Headline>
-                                    <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-                                        <Chip>
-                                            {getQuestionTypeLabel(question.type)}
-                                        </Chip>
-                                        <Chip>
-                                            {t('points')}: {question.points}
-                                        </Chip>
-                                    </div>
-                                </div>
-                            </CardGrid>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 6, marginTop: 8 }}>
+        <>
+            <Group>
+                {questionsQuery.data.map((question, idx) => (
+                    <div key={question.id} className="lessonRow">
+                        {/* Order circle */}
+                        <div className={`lessonIndex lessonIndex--${idx % 8}`}>
+                            {Number(question.orderIndex)}
+                        </div>
+
+                        {/* Question text */}
+                        <div className="lessonContent">
+                            <div className="lessonTitle">{question.question}</div>
+                        </div>
+
+                        {/* Admin actions */}
+                        <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
+                            <div className="lessonRowActions" onClick={(e) => e.stopPropagation()}>
                                 <Button
                                     size="s"
                                     mode="tertiary"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEditQuestion?.(question.id);
-                                    }}
-                                >
-                                    {t('edit')}
-                                </Button>
-                                <Button
-                                    size="s"
-                                    mode="tertiary"
+                                    appearance="negative"
                                     onClick={(e) => handleDeleteQuestion(question.id, e)}
                                 >
                                     {t('delete')}
                                 </Button>
                             </div>
-                        </Box>
-                    </Card>
+                        </PermissionGuard>
+                    </div>
                 ))}
-            </List>
-        </Group>
+            </Group>
+
+            {/* Start test button */}
+            {onStartTest && (
+                <div style={{ padding: '8px 16px 24px' }}>
+                    <Button size="l" stretched mode="primary" onClick={onStartTest}>
+                        {startTestLabel}
+                    </Button>
+                </div>
+            )}
+        </>
     );
 };

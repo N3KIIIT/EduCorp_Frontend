@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Button,
     Group,
@@ -10,9 +10,6 @@ import {
     PanelHeaderBack,
     Tabs,
     TabsItem,
-    Div,
-    Title,
-    Caption,
 } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
@@ -52,8 +49,6 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
     const { goBackPanel, activeModal, closeModal, openModal, goToPanel } = useNavigationStore();
     const { currentTestId } = useAppContextStore();
     const testQuery = useTest(currentTestId || '');
-
-    const [activeTab, setActiveTab] = useState<'questions' | 'take'>('questions');
 
     const modalRoot = (
         <ModalRoot activeModal={activeModal} onClose={closeModal}>
@@ -116,17 +111,8 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                     {/* Tabs */}
                     <Group style={{ marginTop: 12 }}>
                         <Tabs>
-                            <TabsItem
-                                selected={activeTab === 'questions'}
-                                onClick={() => setActiveTab('questions')}
-                            >
+                            <TabsItem selected>
                                 {t('questionsTab')}
-                            </TabsItem>
-                            <TabsItem
-                                selected={activeTab === 'take'}
-                                onClick={() => setActiveTab('take')}
-                            >
-                                {t('takeTestTab')}
                             </TabsItem>
                             <TabsItem
                                 selected={false}
@@ -137,31 +123,10 @@ export const TestDetailsPanel: React.FC<TestDetailsPanelProps> = ({ id }) => {
                         </Tabs>
                     </Group>
 
-                    {activeTab === 'questions' && (
-                        <QuestionList
-                            testId={currentTestId!}
-                            onEditQuestion={(questionId) => {
-                                console.log('Edit question:', questionId);
-                            }}
-                        />
-                    )}
-
-                    {activeTab === 'take' && (
-                        <Div style={{ padding: 16 }}>
-                            <Title level="2">{t('takeTestInstructions')}</Title>
-                            <Div style={{ marginTop: 12 }}>
-                                <Caption>{t('takeTestDescription')}</Caption>
-                            </Div>
-                            <Button
-                                size="l"
-                                mode="primary"
-                                style={{ marginTop: 16, width: '100%' }}
-                                onClick={() => goToPanel(TEST_PANEL_IDS.TAKE)}
-                            >
-                                {t('startTest')}
-                            </Button>
-                        </Div>
-                    )}
+                    <QuestionList
+                        testId={currentTestId!}
+                        onStartTest={() => goToPanel(TEST_PANEL_IDS.TAKE)}
+                    />
                 </>
             )}
         </Panel>
