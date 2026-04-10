@@ -27,7 +27,7 @@ export const TestStartScreen: React.FC<TestStartScreenProps> = ({
     return (
         <Panel id={id}>
             <PanelHeader before={<PanelHeaderBack onClick={onBack} />}>
-                {t('takeTestTab')}
+                {t(`testType.${test.type}`)}
             </PanelHeader>
 
             <div className="testInfoHeader">

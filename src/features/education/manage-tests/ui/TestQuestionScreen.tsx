@@ -15,6 +15,7 @@ import { QuestionAnswerRenderer } from './QuestionAnswerRenderer';
 
 interface TestQuestionScreenProps {
     id: string;
+    testType: string;
     questions: QuestionResponse[];
     currentQuestionIndex: number;
     answers: Record<string, IAnswerDataRequest>;
@@ -43,6 +44,7 @@ function getTimerClass(seconds: number | null): string {
 
 export const TestQuestionScreen: React.FC<TestQuestionScreenProps> = ({
     id,
+    testType,
     questions,
     currentQuestionIndex,
     answers,
@@ -66,7 +68,7 @@ export const TestQuestionScreen: React.FC<TestQuestionScreenProps> = ({
     return (
         <Panel id={id}>
             <PanelHeader before={<PanelHeaderBack onClick={onBack} />}>
-                {t('takeTestTab')}
+                {t(`testType.${testType}`)}
             </PanelHeader>
 
             {timerSeconds !== null && (

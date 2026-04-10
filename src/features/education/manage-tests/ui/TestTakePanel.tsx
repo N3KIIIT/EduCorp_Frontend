@@ -85,7 +85,7 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
         return (
             <Panel id={id}>
                 <PanelHeader before={<PanelHeaderBack onClick={goBackPanel} />}>
-                    {t('takeTestTab')}
+                    {t('details')}
                 </PanelHeader>
                 <LoadingState variant="panel" />
             </Panel>
@@ -128,6 +128,7 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
         <>
             <TestQuestionScreen
                 id={id}
+                testType={test?.type ?? ''}
                 questions={questions}
                 currentQuestionIndex={currentQuestionIndex}
                 answers={answers}
