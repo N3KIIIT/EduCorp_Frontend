@@ -198,6 +198,17 @@
       "confirmDelete": "Delete content?",
       "edit": "Edit",
       "delete": "Delete",
+      "unsupportedType": "Unsupported block type",
+      "type": {
+        "Text": "Text",
+        "Image": "Image",
+        "Video": "Video",
+        "Audio": "Audio",
+        "Pdf": "PDF",
+        "Embedded": "Embedded",
+        "SectionBreak": "Section Break",
+        "Interactive": "Interactive"
+      },
       "modal": {
         "createTitle": "Add Content",
         "blockType": "Content Type",

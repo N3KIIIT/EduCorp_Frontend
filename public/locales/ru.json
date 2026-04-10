@@ -199,6 +199,17 @@
       "confirmDelete": "Удалить контент?",
       "edit": "Редактировать",
       "delete": "Удалить",
+      "unsupportedType": "Неподдерживаемый тип блока",
+      "type": {
+        "Text": "Текст",
+        "Image": "Изображение",
+        "Video": "Видео",
+        "Audio": "Аудио",
+        "Pdf": "PDF",
+        "Embedded": "Встраиваемый",
+        "SectionBreak": "Разделитель",
+        "Interactive": "Интерактив"
+      },
       "modal": {
         "createTitle": "Добавить контент",
         "blockType": "Тип контента",
