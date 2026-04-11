@@ -1,0 +1,207 @@
+/* News card */
+.newsCard {
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--vkui--color_background_content);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border: 1px solid var(--vkui--color_separator_primary);
+    cursor: pointer;
+    margin-bottom: 12px;
+}
+
+.newsCardImage {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.newsCardBody {
+    padding: 14px 16px 16px;
+}
+
+.newsCardTitle {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--vkui--color_text_primary);
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.newsCardPreview {
+    font-size: 14px;
+    color: var(--vkui--color_text_secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.newsCardMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.newsCardDate {
+    font-size: 12px;
+    color: var(--vkui--color_text_tertiary);
+}
+
+.newsCategory {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: var(--vkui--color_background_accent_themed);
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.newsPinBadge {
+    font-size: 14px;
+}
+
+/* News detail */
+.newsDetailImage {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    display: block;
+}
+
+.newsDetailContent {
+    padding: 16px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--vkui--color_text_primary);
+    word-break: break-word;
+}
+
+.newsDetailContent h1, .newsDetailContent h2, .newsDetailContent h3 {
+    margin: 14px 0 6px;
+    font-weight: 700;
+}
+
+.newsDetailContent p {
+    margin: 0 0 12px;
+}
+
+.newsDetailContent p:last-child {
+    margin-bottom: 0;
+}
+
+.newsDetailMeta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--vkui--color_separator_primary);
+}
+
+.newsDetailAuthor {
+    font-size: 13px;
+    color: var(--vkui--color_text_secondary);
+}
+
+/* Category filter chips */
+.newsCategoryFilter {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.newsCategoryFilter::-webkit-scrollbar {
+    display: none;
+}
+
+/* Status badges */
+.newsStatusDraft {
+    background: var(--vkui--color_background_secondary);
+    color: var(--vkui--color_text_secondary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.newsStatusPublished {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.newsStatusArchived {
+    background: rgba(0,0,0,0.06);
+    color: var(--vkui--color_text_tertiary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.newsEmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px;
+    gap: 12px;
+}
+
+.newsEmptyIcon {
+    font-size: 48px;
+}
+
+.newsEmptyText {
+    font-size: 15px;
+    color: var(--vkui--color_text_secondary);
+    text-align: center;
+}
+
+/* Skeleton */
+.newsSkeletonCard {
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--vkui--color_background_content);
+    border: 1px solid var(--vkui--color_separator_primary);
+    margin-bottom: 12px;
+}
+
+.newsSkeletonImage {
+    height: 160px;
+    background: var(--vkui--color_separator_primary);
+    animation: newsSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.newsSkeletonBody {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.newsSkeletonLine {
+    height: 12px;
+    border-radius: 6px;
+    background: var(--vkui--color_separator_primary);
+    animation: newsSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes newsSkeletonPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

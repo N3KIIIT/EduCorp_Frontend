@@ -1,0 +1,277 @@
+/* Pass card (home screen widget) */
+.passCard {
+    margin: 12px 16px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1a237e, #283593);
+    padding: 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(26, 35, 126, 0.35);
+}
+
+.passCard::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+}
+
+.passCard::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+}
+
+.passCardTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.passCardEmployeeInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.passCardOrg {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+
+.passCardName {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.passCardPosition {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.passCardDepartment {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+}
+
+/* QR code area */
+.passCardQR {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.passCardQRLabel {
+    font-size: 9px;
+    color: #333;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Status badge */
+.passStatusRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.passStatusBadge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.passStatusBadge--active {
+    background: rgba(76,175,80,0.25);
+    color: #a5d6a7;
+    border: 1px solid rgba(76,175,80,0.3);
+}
+
+.passStatusBadge--suspended {
+    background: rgba(255,193,7,0.25);
+    color: #ffe082;
+    border: 1px solid rgba(255,193,7,0.3);
+}
+
+.passStatusBadge--revoked {
+    background: rgba(244,67,54,0.25);
+    color: #ef9a9a;
+    border: 1px solid rgba(244,67,54,0.3);
+}
+
+.passStatusBadge--expired {
+    background: rgba(158,158,158,0.25);
+    color: #bdbdbd;
+    border: 1px solid rgba(158,158,158,0.3);
+}
+
+.passCardExpiry {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+}
+
+/* No pass placeholder */
+.passNoCard {
+    margin: 12px 16px;
+    border-radius: 20px;
+    background: var(--vkui--color_background_secondary);
+    border: 2px dashed var(--vkui--color_separator_primary);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.passNoCardIcon {
+    font-size: 36px;
+}
+
+.passNoCardText {
+    font-size: 14px;
+    color: var(--vkui--color_text_secondary);
+}
+
+/* QR code modal overlay */
+.passQRModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+    gap: 16px;
+}
+
+.passQRModalTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--vkui--color_text_primary);
+    text-align: center;
+}
+
+.passQRModalSubtitle {
+    font-size: 13px;
+    color: var(--vkui--color_text_secondary);
+    text-align: center;
+}
+
+/* Scan result */
+.passScanResult {
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.passScanResult--valid {
+    background: rgba(76,175,80,0.1);
+    border: 1px solid rgba(76,175,80,0.3);
+}
+
+.passScanResult--invalid {
+    background: rgba(244,67,54,0.1);
+    border: 1px solid rgba(244,67,54,0.3);
+}
+
+.passScanResultIcon {
+    font-size: 48px;
+}
+
+.passScanResultName {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--vkui--color_text_primary);
+}
+
+.passScanResultMeta {
+    font-size: 14px;
+    color: var(--vkui--color_text_secondary);
+}
+
+.passScanResultMessage {
+    font-size: 13px;
+    color: var(--vkui--color_text_secondary);
+}
+
+/* Admin list */
+.passListItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--vkui--color_separator_primary);
+}
+
+.passListItemInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.passListItemName {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vkui--color_text_primary);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.passListItemMeta {
+    font-size: 12px;
+    color: var(--vkui--color_text_secondary);
+    margin-top: 2px;
+}
+
+/* Scan area */
+#qr-reader {
+    width: 100% !important;
+    border: none !important;
+}
+
+#qr-reader video {
+    border-radius: 12px;
+}
+
+#qr-reader__scan_region {
+    border-radius: 12px;
+    overflow: hidden;
+}

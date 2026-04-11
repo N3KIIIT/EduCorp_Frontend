@@ -127,6 +127,92 @@
       "noTenantDescription": "Для работы с курсами необходимо быть в тенанте"
     }
   },
+  "news": {
+    "addPost": "Добавить новость",
+    "allCategories": "Все",
+    "empty": "Новостей пока нет",
+    "loading": "Загрузка новостей...",
+    "errorLoading": "Ошибка загрузки новостей",
+    "pinned": "Закреплено",
+    "author": "Автор",
+    "publishedAt": "Опубликовано",
+    "status": {
+      "Draft": "Черновик",
+      "Published": "Опубликовано",
+      "Archived": "В архиве"
+    },
+    "actions": {
+      "publish": "Опубликовать",
+      "unpublish": "Снять с публикации",
+      "archive": "В архив",
+      "pin": "Закрепить",
+      "unpin": "Открепить",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "modal": {
+      "createTitle": "Новая новость",
+      "editTitle": "Редактировать новость",
+      "title": "Заголовок",
+      "titlePlaceholder": "Введите заголовок...",
+      "content": "Текст новости",
+      "contentPlaceholder": "Введите текст...",
+      "imageUrl": "URL изображения",
+      "imageUrlPlaceholder": "https://example.com/image.jpg",
+      "category": "Категория",
+      "noCategory": "Без категории",
+      "save": "Сохранить",
+      "cancel": "Отмена"
+    },
+    "confirmDelete": "Удалить новость?"
+  },
+  "passes": {
+    "title": "Пропуск",
+    "noPass": "Пропуск не выдан",
+    "noPassDescription": "Обратитесь к администратору",
+    "loading": "Загрузка пропуска...",
+    "errorLoading": "Ошибка загрузки",
+    "scanTitle": "Сканер пропусков",
+    "scanInstruction": "Поднесите QR-код к камере",
+    "scanAgain": "Новое сканирование",
+    "scanError": "Ошибка сканирования",
+    "validPass": "Пропуск действителен",
+    "invalidPass": "Пропуск недействителен",
+    "adminListTitle": "Управление пропусками",
+    "allPasses": "Все",
+    "validUntil": "Действителен до",
+    "noExpiry": "Бессрочный",
+    "status": {
+      "Active": "Активен",
+      "Suspended": "Приостановлен",
+      "Revoked": "Отозван",
+      "Expired": "Истёк"
+    },
+    "actions": {
+      "suspend": "Приостановить",
+      "reinstate": "Восстановить",
+      "revoke": "Отозвать",
+      "scan": "Сканировать"
+    },
+    "suspendReason": "Причина приостановки",
+    "confirmRevoke": "Отозвать пропуск? Это действие необратимо.",
+    "suspendedWarning": "Пропуск приостановлен",
+    "revokedWarning": "Пропуск отозван",
+    "qrLabel": "QR",
+    "enlargeQR": "Показать QR-код"
+  },
+  "organization": {
+    "title": "Об организации",
+    "name": "Название",
+    "description": "Описание",
+    "website": "Сайт",
+    "address": "Адрес",
+    "phone": "Телефон",
+    "email": "Email",
+    "edit": "Редактировать",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
   "common": {
     "loading": "Загрузка",
     "save": "Сохранить",

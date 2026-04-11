@@ -126,6 +126,92 @@
       "noTenantDescription": "You need to be in a tenant to manage courses"
     }
   },
+  "news": {
+    "addPost": "Add post",
+    "allCategories": "All",
+    "empty": "No news yet",
+    "loading": "Loading news...",
+    "errorLoading": "Error loading news",
+    "pinned": "Pinned",
+    "author": "Author",
+    "publishedAt": "Published",
+    "status": {
+      "Draft": "Draft",
+      "Published": "Published",
+      "Archived": "Archived"
+    },
+    "actions": {
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "archive": "Archive",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "modal": {
+      "createTitle": "New post",
+      "editTitle": "Edit post",
+      "title": "Title",
+      "titlePlaceholder": "Enter title...",
+      "content": "Content",
+      "contentPlaceholder": "Enter content...",
+      "imageUrl": "Image URL",
+      "imageUrlPlaceholder": "https://example.com/image.jpg",
+      "category": "Category",
+      "noCategory": "No category",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "confirmDelete": "Delete this post?"
+  },
+  "passes": {
+    "title": "Pass",
+    "noPass": "No pass issued",
+    "noPassDescription": "Contact your administrator",
+    "loading": "Loading pass...",
+    "errorLoading": "Error loading",
+    "scanTitle": "Pass Scanner",
+    "scanInstruction": "Point camera at the QR code",
+    "scanAgain": "Scan again",
+    "scanError": "Scan error",
+    "validPass": "Pass is valid",
+    "invalidPass": "Pass is invalid",
+    "adminListTitle": "Manage passes",
+    "allPasses": "All",
+    "validUntil": "Valid until",
+    "noExpiry": "No expiry",
+    "status": {
+      "Active": "Active",
+      "Suspended": "Suspended",
+      "Revoked": "Revoked",
+      "Expired": "Expired"
+    },
+    "actions": {
+      "suspend": "Suspend",
+      "reinstate": "Reinstate",
+      "revoke": "Revoke",
+      "scan": "Scan"
+    },
+    "suspendReason": "Suspension reason",
+    "confirmRevoke": "Revoke pass? This action is irreversible.",
+    "suspendedWarning": "Pass is suspended",
+    "revokedWarning": "Pass has been revoked",
+    "qrLabel": "QR",
+    "enlargeQR": "Show QR code"
+  },
+  "organization": {
+    "title": "About organization",
+    "name": "Name",
+    "description": "Description",
+    "website": "Website",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
   "common": {
     "loading": "Loading",
     "save": "Save",

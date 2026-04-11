@@ -68,6 +68,18 @@ export const TEST_PANEL_IDS = {
 } as const;
 export type TestPanelId = typeof TEST_PANEL_IDS[keyof typeof TEST_PANEL_IDS]
 
+export const NEWS_PANEL_IDS = {
+    DETAIL: 'news-detail',
+} as const;
+export type NewsPanelId = typeof NEWS_PANEL_IDS[keyof typeof NEWS_PANEL_IDS]
+
+export const PASS_PANEL_IDS = {
+    DETAIL: 'pass-detail',
+    SCAN: 'pass-scan',
+    ADMIN_LIST: 'pass-admin-list',
+} as const;
+export type PassPanelId = typeof PASS_PANEL_IDS[keyof typeof PASS_PANEL_IDS];
+
 export type PanelId =
     | HomePanelId
     | SearchPanelId
@@ -76,7 +88,9 @@ export type PanelId =
     | AdminPanelId
     | CoursePanelId
     | LessonPanelId
-    | TestPanelId;
+    | TestPanelId
+    | NewsPanelId
+    | PassPanelId;
 
 
 export const DEFAULT_PANELS: Record<ViewId, PanelId> = {

@@ -20,3 +20,7 @@ export const QUESTION_MODAL_IDS = {
     CREATE: 'create-question-modal'
 }
 
+export const NEWS_MODAL_IDS = {
+    CREATE: 'create-news-modal',
+}
+

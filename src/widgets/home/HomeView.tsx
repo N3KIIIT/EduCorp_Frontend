@@ -10,12 +10,21 @@ import { TestDetailsPanel } from "@/features/education/manage-tests/ui/TestDetai
 import { TestTakePanel } from "@/features/education/manage-tests/ui/TestTakePanel";
 import { AttemptsHistoryPanel } from "@/features/education/manage-tests/ui/AttemptsHistoryPanel";
 import { AttemptReviewPanel } from "@/features/education/manage-tests/ui/AttemptReviewPanel";
-import { COURSE_PANEL_IDS, LESSON_PANEL_IDS, TEST_PANEL_IDS } from "@/shared/config/navigation/panel-ids";
+import { NewsPostDetailPanel } from "@/features/news/ui/NewsPostDetailPanel";
+import { PassScanPanel } from "@/features/passes/ui/PassScanPanel";
+import { AdminPassListPanel } from "@/features/passes/ui/AdminPassListPanel";
+import {
+    COURSE_PANEL_IDS,
+    LESSON_PANEL_IDS,
+    TEST_PANEL_IDS,
+    NEWS_PANEL_IDS,
+    PASS_PANEL_IDS,
+} from "@/shared/config/navigation/panel-ids";
 import { VIEW_IDS, HOME_PANEL_IDS } from '@/shared/config/navigation';
 
 
 interface Props {
-    id: string
+    id: string;
 }
 
 export const HomeView: React.FC<Props> = ({ id }) => {
@@ -26,15 +35,24 @@ export const HomeView: React.FC<Props> = ({ id }) => {
             id={id}
             activePanel={activePanels[VIEW_IDS.HOME]}
             onSwipeBack={goBackPanel}
-            history={[HOME_PANEL_IDS.MAIN]}>
-
+            history={[HOME_PANEL_IDS.MAIN]}
+        >
             <HomeMainPanel id={HOME_PANEL_IDS.MAIN} />
+
+            {/* Education */}
             <CourseDetailsPanel id={COURSE_PANEL_IDS.DETAIL} />
             <LessonDetailsPanel id={LESSON_PANEL_IDS.DETAIL} />
             <TestDetailsPanel id={TEST_PANEL_IDS.DETAIL} />
             <TestTakePanel id={TEST_PANEL_IDS.TAKE} />
             <AttemptsHistoryPanel id={TEST_PANEL_IDS.ATTEMPTS} />
             <AttemptReviewPanel id={TEST_PANEL_IDS.ATTEMPT_REVIEW} />
+
+            {/* News */}
+            <NewsPostDetailPanel id={NEWS_PANEL_IDS.DETAIL} />
+
+            {/* Passes */}
+            <PassScanPanel id={PASS_PANEL_IDS.SCAN} />
+            <AdminPassListPanel id={PASS_PANEL_IDS.ADMIN_LIST} />
         </View>
     );
 };
