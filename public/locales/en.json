@@ -62,6 +62,9 @@
           "ru": "Russian"
         }
       }
+    },
+    "organization": {
+      "button": "About organization"
     }
   },
   "navigation": {
@@ -204,13 +207,15 @@
     "title": "About organization",
     "name": "Name",
     "description": "Description",
+    "logoUrl": "Logo (URL)",
     "website": "Website",
     "address": "Address",
     "phone": "Phone",
     "email": "Email",
     "edit": "Edit",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "noDetails": "No contact information provided"
   },
   "common": {
     "loading": "Loading",
@@ -409,6 +414,10 @@
       "submitTest": "Submit Test",
       "testSubmitted": "Test submitted successfully!",
       "submitError": "Error submitting test",
+      "exitTestTitle": "Exit test?",
+      "exitTestText": "The attempt will be interrupted. Progress will not be saved.",
+      "confirmExit": "Exit",
+      "cancelExit": "Stay",
       "details": "Test Details",
       "testType": {
         "Practice": "Practice",

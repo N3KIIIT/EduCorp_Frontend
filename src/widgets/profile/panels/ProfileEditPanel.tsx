@@ -8,8 +8,11 @@ import {
     Group,
     FormItem,
     Input,
-    Button, Box
+    Button,
+    Box,
+    Snackbar,
 } from '@vkontakte/vkui';
+import { Icon24ErrorCircleOutline } from '@vkontakte/icons';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { useSessionStore } from '@/entities/session/model/store';
 import { ValidationError } from '@/shared/lib/errors/AppError';
@@ -24,8 +27,19 @@ export const ProfileEditPanel: React.FC<Props> = ({ id }) => {
 
     const [firstName, setFirstName] = useState(user?.firstName || '');
     const [lastName, setLastName] = useState(user?.lastName || '');
+    const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
 
-    const { mutate: updateUser, isPending, error } = useUpdateUser();
+    const { mutate: updateUser, isPending } = useUpdateUser();
+
+    const showError = (message: string) =>
+        setSnackbar(
+            <Snackbar
+                before={<Icon24ErrorCircleOutline fill="var(--vkui--color_accent_red)" />}
+                onClose={() => setSnackbar(null)}
+            >
+                {message}
+            </Snackbar>,
+        );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,20 +50,15 @@ export const ProfileEditPanel: React.FC<Props> = ({ id }) => {
             { firstName, lastName },
             {
                 onSuccess: () => {
-                    console.log("User updated successfully");
                     goBackPanel();
                 },
                 onError: (err) => {
-                    console.log("Error updating user: ", err);
                     if (err instanceof ValidationError) {
                         const errors = err.details?.errors;
-                        if (Array.isArray(errors)) {
-                            alert(err.message + '\n' + errors.join('\n'));
-                        } else {
-                            alert(err.message);
-                        }
+                        const detail = Array.isArray(errors) ? errors.join(', ') : '';
+                        showError(detail ? `${err.message}: ${detail}` : err.message);
                     } else {
-                        alert(err.message);
+                        showError(err.message);
                     }
                 }
             }
@@ -94,6 +103,7 @@ export const ProfileEditPanel: React.FC<Props> = ({ id }) => {
                     </FormItem>
                 </Box>
             </Group>
+            {snackbar}
         </Panel>
     );
 };

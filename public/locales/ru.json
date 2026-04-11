@@ -62,6 +62,9 @@
           "ru": "Русский"
         }
       }
+    },
+    "organization": {
+      "button": "Об организации"
     }
   },
   "navigation": {
@@ -205,13 +208,15 @@
     "title": "Об организации",
     "name": "Название",
     "description": "Описание",
+    "logoUrl": "Логотип (URL)",
     "website": "Сайт",
     "address": "Адрес",
     "phone": "Телефон",
     "email": "Email",
     "edit": "Редактировать",
     "save": "Сохранить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "noDetails": "Контактная информация не указана"
   },
   "common": {
     "loading": "Загрузка",
@@ -412,6 +417,10 @@
       "submitTest": "Завершить тест",
       "testSubmitted": "Тест успешно отправлен!",
       "submitError": "Ошибка при отправке теста",
+      "exitTestTitle": "Выйти из теста?",
+      "exitTestText": "Попытка будет прервана. Прогресс не сохранится.",
+      "confirmExit": "Выйти",
+      "cancelExit": "Остаться",
       "details": "Детали теста",
       "testType": {
         "Practice": "Практический",

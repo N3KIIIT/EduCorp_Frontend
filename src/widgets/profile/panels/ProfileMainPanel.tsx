@@ -9,10 +9,12 @@ import {
     Cell,
     Avatar,
 } from '@vkontakte/vkui';
-import { Icon24Airplay, Icon24Settings } from '@vkontakte/icons';
+import { Icon24Airplay, Icon24Settings, Icon24BuildingOutline } from '@vkontakte/icons';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { useSessionStore } from '@/entities/session/model/store';
 import { PROFILE_PANEL_IDS } from '@/shared/config/navigation';
+import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
+import { ROLES } from '@/entities/session';
 
 type Props = { id: string };
 
@@ -60,6 +62,15 @@ export const ProfileMainPanel: React.FC<Props> = ({ id }) => {
                 >
                     {t('settings.button')}
                 </Cell>
+
+                <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
+                    <Cell
+                        before={<Icon24BuildingOutline />}
+                        onClick={() => goToPanel(PROFILE_PANEL_IDS.ORGANIZATION)}
+                    >
+                        {t('organization.button')}
+                    </Cell>
+                </PermissionGuard>
             </Group>
         </Panel>
     );

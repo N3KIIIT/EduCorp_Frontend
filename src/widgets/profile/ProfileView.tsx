@@ -7,6 +7,7 @@ import { VIEW_IDS, PROFILE_PANEL_IDS } from '@/shared/config/navigation';
 import { ProfileMainPanel } from './panels/ProfileMainPanel';
 import { ProfileEditPanel } from './panels/ProfileEditPanel';
 import { ProfileSettingsPanel } from './panels/ProfileSettingsPanel';
+import { OrganizationPanel } from '@/features/organization/ui/OrganizationPanel';
 
 type Props = { id: string };
 
@@ -19,11 +20,12 @@ export const ProfileView: React.FC<Props> = ({id}) => {
             activePanel={activePanels[VIEW_IDS.PROFILE]}
             onSwipeBack={goBackPanel}
             history={[PROFILE_PANEL_IDS.MAIN]}>
-            
+
             <ProfileMainPanel id={PROFILE_PANEL_IDS.MAIN} />
             <ProfileEditPanel id={PROFILE_PANEL_IDS.EDIT} />
             <ProfileSettingsPanel id={PROFILE_PANEL_IDS.SETTINGS} />
-            
+            <OrganizationPanel id={PROFILE_PANEL_IDS.ORGANIZATION} />
+
         </View>
     );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Panel, PanelHeader, PanelHeaderBack, Snackbar } from '@vkontakte/vkui';
+import { Alert, Panel, PanelHeader, PanelHeaderBack, Snackbar } from '@vkontakte/vkui';
 import { LoadingState } from '@/components/LoadingState/LoadingState';
 import { Icon24DoneOutline, Icon24ErrorCircleOutline } from '@vkontakte/icons';
 import { useTranslations } from 'next-intl';
@@ -26,6 +26,29 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
     const { currentTestId } = useAppContextStore();
 
     const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
+    const [exitConfirm, setExitConfirm] = useState<React.ReactNode>(null);
+
+    const handleBackWithConfirm = () => {
+        setExitConfirm(
+            <Alert
+                actions={[
+                    {
+                        title: t('cancelExit'),
+                        mode: 'cancel',
+                        action: () => setExitConfirm(null),
+                    },
+                    {
+                        title: t('confirmExit'),
+                        mode: 'destructive',
+                        action: () => { setExitConfirm(null); goBackPanel(); },
+                    },
+                ]}
+                onClose={() => setExitConfirm(null)}
+                title={t('exitTestTitle')}
+                description={t('exitTestText')}
+            />
+        );
+    };
 
     const testQuery = useTestWithQuestions(currentTestId ?? '');
 
@@ -138,10 +161,11 @@ export const TestTakePanel: React.FC<TestTakePanelProps> = ({ id }) => {
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 onComplete={handleComplete}
-                onBack={goBackPanel}
+                onBack={handleBackWithConfirm}
                 isCompleting={isCompleting}
             />
             {snackbar}
+            {exitConfirm}
         </>
     );
 };

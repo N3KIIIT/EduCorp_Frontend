@@ -21,6 +21,7 @@ export const PROFILE_PANEL_IDS = {
     MAIN: 'profile-main',
     EDIT: 'profile-edit',
     SETTINGS: 'profile-settings',
+    ORGANIZATION: 'profile-organization',
 } as const;
 
 export type ProfilePanelId = typeof PROFILE_PANEL_IDS[keyof typeof PROFILE_PANEL_IDS];
