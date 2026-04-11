@@ -113,7 +113,7 @@ export const AdminPassListPanel: React.FC<AdminPassListPanelProps> = ({ id }) =>
 
                 {isLoading && (
                     <Div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
-                        <Spinner size="medium" />
+                        <Spinner size="m" />
                     </Div>
                 )}
 
@@ -166,7 +166,8 @@ export const AdminPassListPanel: React.FC<AdminPassListPanelProps> = ({ id }) =>
                                 {pass.status !== 'Revoked' && (
                                     <Button
                                         size="s"
-                                        mode="destructive"
+                                        mode="secondary"
+                                        appearance="negative"
                                         loading={revokePass.isPending}
                                         onClick={() => handleRevoke(pass)}
                                     >

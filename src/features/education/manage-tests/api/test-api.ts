@@ -112,14 +112,14 @@ export const useDeleteTest = () => {
 export const useTest = (testId: string) => {
     return useQuery({
         queryKey: testKeys.detail(testId),
-        queryFn: async () => {
-            const response = await apiClient.get<TestResponse>({
+        queryFn: async (): Promise<TestResponse> => {
+            const response = await apiClient.get({
                 url: '/Tests/{id}',
                 path: { id: testId }
             });
 
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as TestResponse;
         },
         enabled: !!testId,
     });

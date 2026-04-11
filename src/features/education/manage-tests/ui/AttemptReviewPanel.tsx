@@ -380,7 +380,7 @@ export const AttemptReviewPanel: React.FC<AttemptReviewPanelProps> = ({ id }) =>
 
             {isLoading && (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
-                    <Spinner size="large" />
+                    <Spinner size="l" />
                 </div>
             )}
 

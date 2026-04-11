@@ -114,14 +114,14 @@ export const useDeleteContentBlock = () => {
 export const useContentBlock = (contentBlockId: string) => {
     return useQuery({
         queryKey: contentBlockKeys.detail(contentBlockId),
-        queryFn: async () => {
-            const response = await apiClient.get<ContentBlockResponse>({
+        queryFn: async (): Promise<ContentBlockResponse> => {
+            const response = await apiClient.get({
                 url: '/ContentBlocks/{id}',
                 path: { id: contentBlockId }
             });
 
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as ContentBlockResponse;
         },
         enabled: !!contentBlockId,
     });

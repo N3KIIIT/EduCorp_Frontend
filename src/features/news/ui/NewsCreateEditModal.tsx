@@ -115,7 +115,7 @@ export const NewsCreateEditModal: React.FC<NewsCreateEditModalProps> = ({
         >
             {isLoadingPost ? (
                 <Div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
-                    <Spinner size="medium" />
+                    <Spinner size="m" />
                 </Div>
             ) : (
                 <form onSubmit={handleSubmit}>

@@ -121,7 +121,7 @@ export const NewsPostDetailPanel: React.FC<NewsPostDetailPanelProps> = ({ id }) 
 
             {postQuery.isLoading && (
                 <Div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
-                    <Spinner size="medium" />
+                    <Spinner size="m" />
                 </Div>
             )}
 

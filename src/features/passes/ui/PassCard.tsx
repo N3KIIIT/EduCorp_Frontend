@@ -69,7 +69,7 @@ export const PassCard: React.FC = () => {
             <ModalPage
                 id={PASS_QR_MODAL_ID}
                 header={
-                    <ModalPageHeader onClose={handleModalClose}>
+                    <ModalPageHeader>
                         Мой пропуск
                     </ModalPageHeader>
                 }
@@ -111,7 +111,7 @@ export const PassCard: React.FC = () => {
                         opacity: 0.6,
                     }}
                 >
-                    <Spinner size="medium" style={{ color: '#fff' }} />
+                    <Spinner size="m" style={{ color: '#fff' }} />
                 </div>
             </>
         );

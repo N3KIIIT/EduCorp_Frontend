@@ -117,7 +117,7 @@ export const PassScanPanel: React.FC<PassScanPanelProps> = ({ id }) => {
 
                 {validatePass.isPending && (
                     <Div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
-                        <Spinner size="medium" />
+                        <Spinner size="m" />
                     </Div>
                 )}
 

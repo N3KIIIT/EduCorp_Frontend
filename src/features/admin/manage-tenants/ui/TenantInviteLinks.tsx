@@ -26,7 +26,7 @@ const PAGE_SIZE = 10;
 const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
     const t = useTranslations('admin.tenants.inviteLinks');
     const [statusFilter, setStatusFilter] = useState<InviteStatus | undefined>('Active');
-    const {activeModal, openModal} = useNavigationStore();
+    const {activeModal, openModal, closeModal} = useNavigationStore();
     const [sortConfig, setSortConfig] = useState<{ field: string; isDescending: boolean }>({
         field: 'CreatedAt',
         isDescending: true,
@@ -41,10 +41,10 @@ const TenantInviteLinks: React.FC<TenantInviteLinksProps> = ({tenantId}) => {
     } = useInfiniteInviteLinks(tenantId, PAGE_SIZE, statusFilter, sortConfig.field, sortConfig.isDescending);
 
     const modalRoot = (
-        <ModalRoot activeModal={activeModal} onClose={close}>
+        <ModalRoot activeModal={activeModal} onClose={closeModal}>
             <CreateInviteModal
                 tenantId={tenantId}
-                onClose={() => closeModal}
+                onClose={closeModal}
             />
         </ModalRoot>
     );

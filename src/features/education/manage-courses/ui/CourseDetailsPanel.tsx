@@ -81,7 +81,7 @@ export const CourseDetailsPanel: React.FC<CourseDetailsPanelProps> = ({ id }) =>
 
             {courseQuery.isLoading && (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
-                    <Spinner size="large" />
+                    <Spinner size="l" />
                 </div>
             )}
 

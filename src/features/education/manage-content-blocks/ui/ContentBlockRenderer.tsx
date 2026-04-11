@@ -143,7 +143,7 @@ export const ContentBlockRenderer: React.FC<ContentBlockRendererProps> = ({ bloc
     if (isLoading) {
         return (
             <div className="cbLoading">
-                <Spinner size="regular" />
+                <Spinner size="m" />
             </div>
         );
     }

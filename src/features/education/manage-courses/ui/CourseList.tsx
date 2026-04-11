@@ -78,7 +78,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onView, onEdit, onDelet
                                 {t('edit')}
                             </Button>
                         )}
-                        <Button size="s" mode="destructive" onClick={onDelete}>
+                        <Button size="s" mode="secondary" appearance="negative" onClick={onDelete}>
                             {t('delete')}
                         </Button>
                     </div>

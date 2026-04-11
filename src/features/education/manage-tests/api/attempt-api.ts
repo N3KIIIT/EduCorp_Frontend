@@ -84,13 +84,13 @@ export const useCompleteAttempt = () => {
 export const useAttempt = (attemptId: string) => {
     return useQuery({
         queryKey: [...ATTEMPTS_QUERY_KEY, attemptId],
-        queryFn: async () => {
-            const response = await apiClient.get<AttemptResponse>({
+        queryFn: async (): Promise<AttemptResponse> => {
+            const response = await apiClient.get({
                 url: '/Attempts/{id}',
                 path: { id: attemptId },
             });
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as AttemptResponse;
         },
         enabled: !!attemptId,
     });
@@ -99,13 +99,13 @@ export const useAttempt = (attemptId: string) => {
 export const useAttemptWithAnswers = (attemptId: string) => {
     return useQuery({
         queryKey: [...ATTEMPTS_QUERY_KEY, attemptId, 'answers'],
-        queryFn: async () => {
-            const response = await apiClient.get<AttemptResponse>({
+        queryFn: async (): Promise<AttemptResponse> => {
+            const response = await apiClient.get({
                 url: '/Attempts/{id}/WithAnswers',
                 path: { id: attemptId },
             });
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as AttemptResponse;
         },
         enabled: !!attemptId,
     });
@@ -114,13 +114,13 @@ export const useAttemptWithAnswers = (attemptId: string) => {
 export const useAttemptResults = (attemptId: string) => {
     return useQuery({
         queryKey: [...ATTEMPTS_QUERY_KEY, attemptId, 'results'],
-        queryFn: async () => {
-            const response = await apiClient.get<AttemptResponse>({
+        queryFn: async (): Promise<AttemptResponse> => {
+            const response = await apiClient.get({
                 url: '/Attempts/{id}/Results',
                 path: { id: attemptId },
             });
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as AttemptResponse;
         },
         enabled: !!attemptId,
     });
@@ -129,12 +129,12 @@ export const useAttemptResults = (attemptId: string) => {
 export const useActiveAttempt = (testId: string) => {
     return useQuery({
         queryKey: [...ATTEMPTS_QUERY_KEY, 'active', testId],
-        queryFn: async () => {
-            const response = await apiClient.get<AttemptResponse>({
+        queryFn: async (): Promise<AttemptResponse | null> => {
+            const response = await apiClient.get({
                 url: '/Attempts/Active/{testId}',
                 path: { testId },
             });
-            return response.data ?? null;
+            return (response.data as AttemptResponse | null) ?? null;
         },
         enabled: !!testId,
         retry: false,
@@ -144,13 +144,13 @@ export const useActiveAttempt = (testId: string) => {
 export const useTestWithQuestions = (testId: string) => {
     return useQuery({
         queryKey: ['education', 'tests', testId, 'questions'],
-        queryFn: async () => {
-            const response = await apiClient.get<TestResponse>({
+        queryFn: async (): Promise<TestResponse> => {
+            const response = await apiClient.get({
                 url: '/Tests/{id}/WithQuestions',
                 path: { id: testId },
             });
             if (!response.data) throw new Error('No data received');
-            return response.data;
+            return response.data as TestResponse;
         },
         enabled: !!testId,
     });

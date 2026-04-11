@@ -77,7 +77,7 @@ export const TestResultsScreen: React.FC<TestResultsScreenProps> = ({
 
             {isLoading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
-                    <Spinner size="large" />
+                    <Spinner size="l" />
                 </div>
             ) : (
                 <div className="resultsContainer">

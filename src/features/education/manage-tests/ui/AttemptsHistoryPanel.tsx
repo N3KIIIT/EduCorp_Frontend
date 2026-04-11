@@ -120,7 +120,7 @@ export const AttemptsHistoryPanel: React.FC<AttemptsHistoryPanelProps> = ({ id }
 
             {attemptsQuery.isLoading && (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
-                    <Spinner size="large" />
+                    <Spinner size="l" />
                 </div>
             )}
 
@@ -163,7 +163,6 @@ export const AttemptsHistoryPanel: React.FC<AttemptsHistoryPanelProps> = ({ id }
                                             .join(' · ')
                                     }
                                     onClick={() => attempt.id && handleSelectAttempt(attempt.id)}
-                                    expandable="auto"
                                 >
                                     {isInProgress
                                         ? t('statusInProgress')
