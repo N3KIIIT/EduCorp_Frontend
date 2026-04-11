@@ -12,9 +12,10 @@ export type PassResponse = {
     id: string;
     userId: string;
     token: string;
+    tokenExpiresAt: string | null;   // QR token TTL — refreshed on every GET /passes/my
     status: PassStatus;
     createdAt: string;
-    expiresAt: string | null;
+    expiresAt: string | null;        // Pass validity end date (optional)
     suspendedAt: string | null;
     suspendReason: string | null;
     user?: PassUserInfo | null;

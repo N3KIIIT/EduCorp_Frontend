@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Div,
     ModalRoot,
     ModalPage,
     ModalPageHeader,
@@ -22,101 +21,132 @@ const RUSSIAN_MONTHS = [
     'июл', 'авг', 'сен', 'окт', 'ноя', 'дек',
 ];
 
-function formatDate(dateStr: string | null): string {
+function formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = RUSSIAN_MONTHS[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
+    const d = new Date(dateStr);
+    return `${d.getDate()} ${RUSSIAN_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 function getStatusLabel(status: string): string {
     switch (status) {
-        case 'Active': return 'Активен';
+        case 'Active':    return 'Активен';
         case 'Suspended': return 'Приостановлен';
-        case 'Revoked': return 'Отозван';
-        case 'Expired': return 'Истёк';
-        default: return status;
+        case 'Revoked':   return 'Отозван';
+        case 'Expired':   return 'Истёк';
+        default:          return status;
     }
+}
+
+/** Returns a human-readable countdown string like "23:41" or "1ч 02м" until the given ISO timestamp. */
+function useTokenCountdown(tokenExpiresAt: string | null | undefined): string {
+    const [label, setLabel] = useState('');
+
+    useEffect(() => {
+        if (!tokenExpiresAt) { setLabel(''); return; }
+
+        const tick = () => {
+            const msLeft = new Date(tokenExpiresAt).getTime() - Date.now();
+            if (msLeft <= 0) { setLabel(''); return; }
+            const totalSec = Math.floor(msLeft / 1000);
+            const h = Math.floor(totalSec / 3600);
+            const m = Math.floor((totalSec % 3600) / 60);
+            const s = totalSec % 60;
+            if (h > 0) {
+                setLabel(`${h}ч ${String(m).padStart(2, '0')}м`);
+            } else {
+                setLabel(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
+            }
+        };
+
+        tick();
+        const id = setInterval(tick, 1000);
+        return () => clearInterval(id);
+    }, [tokenExpiresAt]);
+
+    return label;
 }
 
 export const PassCard: React.FC = () => {
     const { activeModal, openModal, closeModal } = useNavigationStore();
     const { user } = useSessionStore();
-    const { data: pass, isLoading } = useMyPass();
+    const { data: pass, isLoading, isFetching } = useMyPass();
     const { data: orgInfo } = useOrganizationInfo();
 
-    const [, setQrOpen] = useState(false);
+    const countdown = useTokenCountdown(pass?.tokenExpiresAt);
 
-    const handleQRClick = () => {
-        setQrOpen(true);
-        openModal(PASS_QR_MODAL_ID);
-    };
+    const handleQRClick = () => openModal(PASS_QR_MODAL_ID);
+    const handleModalClose = () => closeModal();
 
-    const handleModalClose = () => {
-        setQrOpen(false);
-        closeModal();
-    };
-
-    const fullName = pass?.user?.fullName ?? user?.fullName ?? '';
-    const position = pass?.user?.position ?? null;
+    const fullName   = pass?.user?.fullName   ?? user?.fullName   ?? '';
+    const position   = pass?.user?.position   ?? null;
     const department = pass?.user?.department ?? null;
-    const orgName = orgInfo?.name ?? '';
+    const orgName    = orgInfo?.name ?? '';
 
+    // ── QR modal (expanded view) ──────────────────────────────────────────────
     const modalRoot = (
         <ModalRoot activeModal={activeModal} onClose={handleModalClose}>
             <ModalPage
                 id={PASS_QR_MODAL_ID}
-                header={
-                    <ModalPageHeader>
-                        Мой пропуск
-                    </ModalPageHeader>
-                }
+                header={<ModalPageHeader>Мой пропуск</ModalPageHeader>}
             >
                 <div className="passQRModal">
+                    {orgName && <div className="passQRModalOrg">{orgName}</div>}
                     <div className="passQRModalTitle">{fullName}</div>
+                    {position  && <div className="passQRModalMeta">{position}</div>}
+                    {department && <div className="passQRModalMeta">{department}</div>}
+
                     {pass && (
-                        <>
-                            <QRCodeSVG value={pass.token} size={220} />
-                            {pass.expiresAt && (
-                                <div className="passQRModalSubtitle">
-                                    Действителен до: {formatDate(pass.expiresAt)}
+                        <div className="passQRModalCode">
+                            <QRCodeSVG
+                                value={pass.token}
+                                size={240}
+                                level="M"
+                                includeMargin={false}
+                            />
+                            {isFetching && (
+                                <div className="passQRRefreshing">
+                                    <Spinner size="s" />
+                                    <span>Обновление QR…</span>
                                 </div>
                             )}
-                            <div className="passQRModalSubtitle">
-                                <span className={`passStatusBadge passStatusBadge--${pass.status.toLowerCase()}`}>
-                                    {getStatusLabel(pass.status)}
+                        </div>
+                    )}
+
+                    {pass && (
+                        <div className="passQRModalFooter">
+                            <span className={`passStatusBadge passStatusBadge--${pass.status.toLowerCase()}`}>
+                                {getStatusLabel(pass.status)}
+                            </span>
+                            {countdown && (
+                                <span className="passQRModalCountdown">
+                                    ⟳ обновится через {countdown}
                                 </span>
-                            </div>
-                        </>
+                            )}
+                        </div>
                     )}
                 </div>
             </ModalPage>
         </ModalRoot>
     );
 
+    // ── Skeleton ──────────────────────────────────────────────────────────────
     if (isLoading) {
         return (
             <>
                 {modalRoot}
-                <div
-                    className="passCard"
-                    style={{
-                        minHeight: 140,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        animation: 'pulse 1.5s ease-in-out infinite',
-                        opacity: 0.6,
-                    }}
-                >
-                    <Spinner size="m" style={{ color: '#fff' }} />
+                <div className="passCardSkeleton" aria-busy="true">
+                    <div className="passCardSkeletonQR" />
+                    <div className="passCardSkeletonLines">
+                        <div className="passCardSkeletonLine passCardSkeletonLine--wide" />
+                        <div className="passCardSkeletonLine passCardSkeletonLine--mid" />
+                        <div className="passCardSkeletonLine passCardSkeletonLine--short" />
+                    </div>
                 </div>
             </>
         );
     }
 
+    // ── No pass ───────────────────────────────────────────────────────────────
     if (!pass) {
         return (
             <>
@@ -124,20 +154,64 @@ export const PassCard: React.FC = () => {
                 <div className="passNoCard">
                     <div className="passNoCardIcon">🪪</div>
                     <div className="passNoCardText">Пропуск не выдан</div>
+                    <div className="passNoCardSub">Обратитесь к администратору</div>
                 </div>
             </>
         );
     }
 
+    // ── Active / Suspended / Revoked card ─────────────────────────────────────
+    const isActive = pass.status === 'Active';
+
     return (
         <>
             {modalRoot}
-            <div className="passCard">
-                <div className="passCardTop">
-                    <div className="passCardEmployeeInfo">
-                        {orgName && (
-                            <div className="passCardOrg">{orgName}</div>
+            <div className={`passCard passCard--${pass.status.toLowerCase()}`}>
+                {/* Decorative circles */}
+                <div className="passCardDecor passCardDecor--1" />
+                <div className="passCardDecor passCardDecor--2" />
+
+                {/* Top row: org + status */}
+                <div className="passCardHeader">
+                    <span className="passCardOrg">{orgName || 'Пропуск сотрудника'}</span>
+                    <span className={`passStatusBadge passStatusBadge--${pass.status.toLowerCase()}`}>
+                        {getStatusLabel(pass.status)}
+                    </span>
+                </div>
+
+                {/* Middle: QR (left) + info (right) */}
+                <div className="passCardBody">
+                    {/* QR block */}
+                    <button
+                        className="passCardQRBtn"
+                        onClick={handleQRClick}
+                        aria-label="Открыть QR-код"
+                    >
+                        {isActive ? (
+                            <>
+                                <QRCodeSVG
+                                    value={pass.token}
+                                    size={120}
+                                    level="M"
+                                    includeMargin={false}
+                                    fgColor="#111"
+                                />
+                                {isFetching && (
+                                    <div className="passCardQRSpinner">
+                                        <Spinner size="s" />
+                                    </div>
+                                )}
+                                <span className="passCardQRHint">увеличить</span>
+                            </>
+                        ) : (
+                            <div className="passCardQRBlocked">
+                                {pass.status === 'Suspended' ? '⏸' : '🚫'}
+                            </div>
                         )}
+                    </button>
+
+                    {/* Employee info */}
+                    <div className="passCardInfo">
                         <div className="passCardName">{fullName}</div>
                         {position && (
                             <div className="passCardPosition">{position}</div>
@@ -145,58 +219,32 @@ export const PassCard: React.FC = () => {
                         {department && (
                             <div className="passCardDepartment">{department}</div>
                         )}
-                    </div>
-
-                    <div className="passCardQR" onClick={handleQRClick} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') handleQRClick(); }}>
-                        <QRCodeSVG value={pass.token} size={88} />
-                        <div className="passCardQRLabel">QR</div>
+                        {pass.expiresAt && (
+                            <div className="passCardValidUntil">
+                                до {formatDate(pass.expiresAt)}
+                            </div>
+                        )}
                     </div>
                 </div>
 
+                {/* Suspended / revoked reason */}
                 {pass.status === 'Suspended' && (
-                    <Div style={{ padding: '0 0 8px' }}>
-                        <span style={{
-                            display: 'inline-block',
-                            background: 'rgba(255,193,7,0.25)',
-                            color: '#ffe082',
-                            border: '1px solid rgba(255,193,7,0.3)',
-                            borderRadius: 12,
-                            padding: '4px 10px',
-                            fontSize: 12,
-                            fontWeight: 600,
-                        }}>
-                            ⚠️ Пропуск приостановлен{pass.suspendReason ? `: ${pass.suspendReason}` : ''}
-                        </span>
-                    </Div>
+                    <div className="passCardWarning">
+                        ⚠️ Приостановлен{pass.suspendReason ? `: ${pass.suspendReason}` : ''}
+                    </div>
                 )}
-
                 {pass.status === 'Revoked' && (
-                    <Div style={{ padding: '0 0 8px' }}>
-                        <span style={{
-                            display: 'inline-block',
-                            background: 'rgba(244,67,54,0.25)',
-                            color: '#ef9a9a',
-                            border: '1px solid rgba(244,67,54,0.3)',
-                            borderRadius: 12,
-                            padding: '4px 10px',
-                            fontSize: 12,
-                            fontWeight: 600,
-                        }}>
-                            🚫 Пропуск отозван
-                        </span>
-                    </Div>
+                    <div className="passCardWarning passCardWarning--error">
+                        🚫 Пропуск отозван
+                    </div>
                 )}
 
-                <div className="passStatusRow">
-                    <span className={`passStatusBadge passStatusBadge--${pass.status.toLowerCase()}`}>
-                        {getStatusLabel(pass.status)}
-                    </span>
-                    {pass.expiresAt && (
-                        <span className="passCardExpiry">
-                            до {formatDate(pass.expiresAt)}
-                        </span>
-                    )}
-                </div>
+                {/* Footer: token refresh countdown */}
+                {isActive && countdown && (
+                    <div className="passCardFooter">
+                        <span className="passCardCountdown">⟳ QR обновится через {countdown}</span>
+                    </div>
+                )}
             </div>
         </>
     );

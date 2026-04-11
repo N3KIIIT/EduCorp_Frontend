@@ -34,10 +34,13 @@ type PassScanLogsParams = {
     pageSize?: number;
 };
 
+// How many ms before tokenExpiresAt we proactively refetch (30 seconds)
+const TOKEN_REFRESH_LEAD_MS = 30_000;
+
 export const useMyPass = () => {
     return useQuery({
         queryKey: passKeys.myPass(),
-        queryFn: async () => {
+        queryFn: async (): Promise<PassResponse | null> => {
             const response = await apiClient.get({
                 url: '/passes/my',
             });
@@ -45,14 +48,24 @@ export const useMyPass = () => {
             if (response.error) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const status = (response.error as any)?.status ?? (response.error as any)?.statusCode;
-                if (status === 404) {
-                    return null;
-                }
+                if (status === 404) return null;
                 throw response.error;
             }
 
             return (response.data as PassResponse) ?? null;
         },
+        // Schedule next refetch so it fires TOKEN_REFRESH_LEAD_MS before the token expires.
+        // The backend regenerates the token on every GET, so this keeps the QR always fresh.
+        refetchInterval: (query) => {
+            const pass = query.state.data;
+            if (!pass?.tokenExpiresAt) return false;
+            const msUntilRefresh =
+                new Date(pass.tokenExpiresAt).getTime() - Date.now() - TOKEN_REFRESH_LEAD_MS;
+            // If already past refresh window — refetch immediately (but at least 1s gap)
+            return Math.max(msUntilRefresh, 1_000);
+        },
+        // Always treat as stale so background refetch updates the QR
+        staleTime: 0,
     });
 };
 
