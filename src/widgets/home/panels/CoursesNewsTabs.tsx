@@ -12,8 +12,8 @@ import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { COURSE_PANEL_IDS } from '@/shared/config/navigation/panel-ids';
 import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
 import { Icon24Add } from '@vkontakte/icons';
-import { COURSE_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
-import { NEWS_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
+import { COURSE_MODAL_IDS, NEWS_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
+import { ROLES } from '@/entities/session';
 import { HOME_VIEW_TAB_IDS } from '@/shared/config/navigation/tabs-ids';
 import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
 import { useSessionStore } from '@/entities/session/model/store';
@@ -51,7 +51,7 @@ export const CoursesNewsTabs: React.FC = () => {
                         <Header
                             subtitle={t('coursesSubtitle')}
                             after={
-                                <PermissionGuard roles={['ADMIN', 'MANAGER', 'SUPER_ADMIN']}>
+                                <PermissionGuard roles={[ROLES.ADMIN, ROLES.MANAGER, ROLES.SUPER_ADMIN]}>
                                     <Button
                                         size="s"
                                         mode="primary"
