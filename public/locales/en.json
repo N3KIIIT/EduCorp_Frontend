@@ -166,6 +166,7 @@
       "loading": "Loading lessons...",
       "errorLoading": "Error loading lessons",
       "noLessons": "No lessons created yet",
+      "dragToReorder": "Drag to reorder",
       "confirmDelete": "Delete lesson?",
       "edit": "Edit",
       "delete": "Delete",

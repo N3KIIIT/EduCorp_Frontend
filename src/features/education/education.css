@@ -286,6 +286,22 @@
     flex-shrink: 0;
 }
 
+.lessonDragHandle {
+    font-size: 18px;
+    color: var(--vkui--color_icon_tertiary);
+    cursor: grab;
+    padding: 4px 2px;
+    flex-shrink: 0;
+    user-select: none;
+    touch-action: none;
+    line-height: 1;
+}
+
+.lessonDragHandle:active {
+    cursor: grabbing;
+    color: var(--vkui--color_icon_secondary);
+}
+
 /* ── Lesson type dot ─────────────────────────────────────────────────────── */
 .lessonTypeDot {
     display: inline-block;

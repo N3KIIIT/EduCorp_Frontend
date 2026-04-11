@@ -32,7 +32,6 @@ export const LessonCreateModal: React.FC<LessonCreateModalProps> = ({ courseId, 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [lessonType, setLessonType] = useState<LessonType>('Text');
-    const [orderIndex, setOrderIndex] = useState(0);
     const [estimatedDurationMinutes, setEstimatedDurationMinutes] = useState('');
     const createLesson = useCreateLesson();
 
@@ -55,7 +54,6 @@ export const LessonCreateModal: React.FC<LessonCreateModalProps> = ({ courseId, 
         setTitle('');
         setDescription('');
         setLessonType('Text');
-        setOrderIndex(0);
         setEstimatedDurationMinutes('');
     };
 
@@ -95,15 +93,6 @@ export const LessonCreateModal: React.FC<LessonCreateModalProps> = ({ courseId, 
                             value={lessonType}
                             onChange={(e) => setLessonType(e.target.value as LessonType)}
                             options={LESSON_TYPES}
-                        />
-                    </FormItem>
-                    <FormItem top={t('orderIndex')} htmlFor="orderIndex">
-                        <Input
-                            id="orderIndex"
-                            type="number"
-                            value={orderIndex}
-                            onChange={(e) => setOrderIndex(parseInt(e.target.value) || 0)}
-                            min={0}
                         />
                     </FormItem>
                     <FormItem top={t('estimatedDuration')} htmlFor="estimatedDuration">

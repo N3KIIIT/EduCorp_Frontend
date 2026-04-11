@@ -5,6 +5,7 @@ import { apiClient } from '@/shared/api/base-client';
 import {
     AddLessonRequest,
     UpdateLessonRequest,
+    UpdateLessonOrderIndexRequest,
     LessonType,
     LessonResponse,
     LessonBriefResponse,
@@ -173,6 +174,27 @@ export const usePreviousLesson = (lessonId: string) => {
         },
         enabled: !!lessonId,
         retry: false,
+    });
+};
+
+export const useUpdateLessonOrderIndex = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, orderIndex }: { id: string; orderIndex: number }) => {
+            const response = await apiClient.patch({
+                url: '/Lessons/{id}/OrderIndex',
+                path: { id },
+                body: { orderIndex } satisfies UpdateLessonOrderIndexRequest,
+            });
+
+            if (response.error) {
+                throw response.error;
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: LESSONS_QUERY_KEY });
+        },
     });
 };
 
