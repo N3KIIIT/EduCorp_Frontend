@@ -126,6 +126,43 @@
     display: none;
 }
 
+/* Filter chip — inactive */
+.newsCategoryFilter .newsCategory,
+.newsCategoryFilter .newsCategoryActive {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.newsCategoryFilter .newsCategory {
+    background: var(--vkui--color_background_secondary);
+    color: var(--vkui--color_text_secondary);
+}
+
+.newsCategoryFilter .newsCategoryActive {
+    background: var(--vkui--color_background_accent_themed);
+    color: #fff;
+}
+
+/* Edit button inside card */
+.newsEditBtn {
+    all: unset;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    border-radius: 6px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+.newsEditBtn:hover {
+    opacity: 1;
+}
+
 /* Status badges */
 .newsStatusDraft {
     background: var(--vkui--color_background_secondary);

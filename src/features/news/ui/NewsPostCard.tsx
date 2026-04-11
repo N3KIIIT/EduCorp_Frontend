@@ -40,13 +40,20 @@ function getStatusLabel(status: NewsPostStatus): string {
 interface NewsPostCardProps {
     post: NewsPostBriefResponse;
     onClick: () => void;
+    onEdit?: () => void;
 }
 
-export const NewsPostCard: React.FC<NewsPostCardProps> = ({ post, onClick }) => {
+export const NewsPostCard: React.FC<NewsPostCardProps> = ({ post, onClick, onEdit }) => {
     const displayDate = formatDate(post.publishedAt ?? post.createdAt);
 
     return (
-        <div className="newsCard" onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') onClick(); }}>
+        <div
+            className="newsCard"
+            onClick={onClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') onClick(); }}
+        >
             {post.imageUrl && (
                 <img
                     className="newsCardImage"
@@ -73,11 +80,22 @@ export const NewsPostCard: React.FC<NewsPostCardProps> = ({ post, onClick }) => 
                         <span className="newsCardDate">{post.authorName}</span>
                     )}
                     <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
-                        {(post.status === 'Draft' || post.status === 'Archived') && (
-                            <span className={getStatusClassName(post.status)}>
-                                {getStatusLabel(post.status)}
-                            </span>
-                        )}
+                        <>
+                            {(post.status === 'Draft' || post.status === 'Archived') && (
+                                <span className={getStatusClassName(post.status)}>
+                                    {getStatusLabel(post.status)}
+                                </span>
+                            )}
+                            {onEdit && (
+                                <button
+                                    className="newsEditBtn"
+                                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                                    aria-label="Редактировать"
+                                >
+                                    ✏️
+                                </button>
+                            )}
+                        </>
                     </PermissionGuard>
                 </div>
             </div>

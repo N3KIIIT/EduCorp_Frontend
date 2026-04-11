@@ -1,37 +1,45 @@
 'use client';
 
-import React, {useMemo, useState} from 'react';
-import {Button, Group, Header, ModalRoot, Panel, Tabs, TabsItem,} from '@vkontakte/vkui';
-import {useTranslations} from 'next-intl';
-import {CourseList} from '@/features/education/manage-courses/ui/CourseList';
-import {CourseCreateModal} from '@/features/education/manage-courses/ui/CourseCreateModal';
-import {useNavigationStore} from "@/shared/lib/navigation/store";
-import {COURSE_PANEL_IDS} from "@/shared/config/navigation/panel-ids";
-import {PermissionGuard} from "@/features/education/ui/PermissionGuard";
-import {Icon24Add} from "@vkontakte/icons";
-import {COURSE_MODAL_IDS} from "@/shared/config/navigation/modal-ids";
-import {HOME_VIEW_TAB_IDS} from "@/shared/config/navigation/tabs-ids";
-import {useAppContextStore} from "@/shared/lib/navigation/appContextStore";
-import {CourseEditModal} from "@/features/education/manage-courses/ui/CourseEditModal";
-import {NewsPanel} from "@/features/news/ui/NewsPanel";
-import {useSessionStore} from "@/entities/session/model/store";
+import React, { useMemo, useState } from 'react';
+import { Button, Group, Header, ModalRoot, Tabs, TabsItem } from '@vkontakte/vkui';
+import { useTranslations } from 'next-intl';
+import { CourseList } from '@/features/education/manage-courses/ui/CourseList';
+import { CourseCreateModal } from '@/features/education/manage-courses/ui/CourseCreateModal';
+import { CourseEditModal } from '@/features/education/manage-courses/ui/CourseEditModal';
+import { NewsPanel } from '@/features/news/ui/NewsPanel';
+import { NewsCreateEditModal } from '@/features/news/ui/NewsCreateEditModal';
+import { useNavigationStore } from '@/shared/lib/navigation/store';
+import { COURSE_PANEL_IDS } from '@/shared/config/navigation/panel-ids';
+import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
+import { Icon24Add } from '@vkontakte/icons';
+import { COURSE_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
+import { NEWS_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
+import { HOME_VIEW_TAB_IDS } from '@/shared/config/navigation/tabs-ids';
+import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
+import { useSessionStore } from '@/entities/session/model/store';
 
-interface CoursesNewsTabsProps {
-    id: string;
-}
-
-export const CoursesNewsTabs: React.FC<CoursesNewsTabsProps> = ({id}) => {
+export const CoursesNewsTabs: React.FC = () => {
     const t = useTranslations('home.tabs');
-    const {tenantId} = useSessionStore();
-    const {goToPanel, activeModal, openModal, closeModal} = useNavigationStore();
-    const {setCurrentCourseId, currentCourseId} = useAppContextStore();
+    const { tenantId } = useSessionStore();
+    const { goToPanel, activeModal, openModal, closeModal } = useNavigationStore();
+    const { setCurrentCourseId, currentCourseId } = useAppContextStore();
 
     const [activeTab, setActiveTab] = useState<string>(HOME_VIEW_TAB_IDS.COURSE);
+    const [editNewsPostId, setEditNewsPostId] = useState<string | undefined>(undefined);
 
+    // Single ModalRoot for ALL modals in this section
     const modalRoot = (
         <ModalRoot activeModal={activeModal} onClose={closeModal}>
+            {/* Course modals */}
             <CourseCreateModal onClose={closeModal} onSuccess={closeModal} />
             <CourseEditModal courseId={currentCourseId!} onClose={closeModal} onSuccess={closeModal} />
+            {/* News modals */}
+            <NewsCreateEditModal
+                mode={editNewsPostId ? 'edit' : 'create'}
+                postId={editNewsPostId}
+                onClose={closeModal}
+                onSuccess={closeModal}
+            />
         </ModalRoot>
     );
 
@@ -47,7 +55,7 @@ export const CoursesNewsTabs: React.FC<CoursesNewsTabsProps> = ({id}) => {
                                     <Button
                                         size="s"
                                         mode="primary"
-                                        before={<Icon24Add/>}
+                                        before={<Icon24Add />}
                                         onClick={() => openModal(COURSE_MODAL_IDS.CREATE)}
                                     >
                                         {t('addCourse')}
@@ -75,13 +83,26 @@ export const CoursesNewsTabs: React.FC<CoursesNewsTabsProps> = ({id}) => {
             );
         }
 
-        // News tab
-        return <NewsPanel />;
+        // News tab — no ModalRoot here, modals handled above
+        return (
+            <NewsPanel
+                onCreatePost={() => {
+                    setEditNewsPostId(undefined);
+                    openModal(NEWS_MODAL_IDS.CREATE);
+                }}
+                onEditPost={(postId) => {
+                    setEditNewsPostId(postId);
+                    openModal(NEWS_MODAL_IDS.CREATE);
+                }}
+            />
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab, tenantId, t]);
 
     return (
-        <Panel id={id}>
+        <>
             {modalRoot}
+
             <Tabs mode="default" layoutFillMode="stretched">
                 <TabsItem
                     id={HOME_VIEW_TAB_IDS.COURSE}
@@ -100,6 +121,6 @@ export const CoursesNewsTabs: React.FC<CoursesNewsTabsProps> = ({id}) => {
             </Tabs>
 
             {tabsContent}
-        </Panel>
+        </>
     );
 };

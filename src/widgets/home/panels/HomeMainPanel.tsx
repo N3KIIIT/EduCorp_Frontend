@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { useSessionStore } from '@/entities/session/model/store';
 import { CoursesNewsTabs } from './CoursesNewsTabs';
 import { PassCard } from '@/features/passes/ui/PassCard';
-import { COURSE_PANEL_IDS } from "@/shared/config/navigation/panel-ids";
 
 interface Props {
     id: string;
@@ -22,7 +21,7 @@ export const HomeMainPanel: React.FC<Props> = ({ id }) => {
         <Panel id={id}>
             <PanelHeader>{t('title')}</PanelHeader>
             <PassCard />
-            <CoursesNewsTabs id={COURSE_PANEL_IDS.MAIN} />
+            <CoursesNewsTabs />
         </Panel>
     );
 };

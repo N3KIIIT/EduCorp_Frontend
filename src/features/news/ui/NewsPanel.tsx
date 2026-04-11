@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Div, ModalRoot, Spinner } from '@vkontakte/vkui';
+import { Button, Div } from '@vkontakte/vkui';
 import { useTranslations } from 'next-intl';
 import { useNavigationStore } from '@/shared/lib/navigation/store';
 import { useAppContextStore } from '@/shared/lib/navigation/appContextStore';
@@ -9,10 +9,8 @@ import { PermissionGuard } from '@/features/education/ui/PermissionGuard';
 import { ROLES } from '@/entities/session';
 import { useSessionStore } from '@/entities/session';
 import { NEWS_PANEL_IDS } from '@/shared/config/navigation/panel-ids';
-import { NEWS_MODAL_IDS } from '@/shared/config/navigation/modal-ids';
 import { useNewsPosts, useNewsCategories } from '../api/news-api';
 import { NewsPostCard } from './NewsPostCard';
-import { NewsCreateEditModal } from './NewsCreateEditModal';
 import '@/features/news/news.css';
 
 function NewsSkeletonCard() {
@@ -28,14 +26,18 @@ function NewsSkeletonCard() {
     );
 }
 
-export const NewsPanel: React.FC = () => {
+interface NewsPanelProps {
+    onCreatePost?: () => void;
+    onEditPost?: (postId: string) => void;
+}
+
+export const NewsPanel: React.FC<NewsPanelProps> = ({ onCreatePost, onEditPost }) => {
     const t = useTranslations('news');
-    const { goToPanel, activeModal, openModal, closeModal } = useNavigationStore();
+    const { goToPanel } = useNavigationStore();
     const { setCurrentNewsPostId } = useAppContextStore();
     const { hasAnyRole } = useSessionStore();
 
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-    const [editPostId, setEditPostId] = useState<string | undefined>(undefined);
 
     const isAdmin = hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]);
 
@@ -59,38 +61,15 @@ export const NewsPanel: React.FC = () => {
         goToPanel(NEWS_PANEL_IDS.DETAIL);
     };
 
-    const handleCreateClick = () => {
-        setEditPostId(undefined);
-        openModal(NEWS_MODAL_IDS.CREATE);
-    };
-
-    const handleEditClick = (postId: string) => {
-        setEditPostId(postId);
-        openModal(NEWS_MODAL_IDS.CREATE);
-    };
-
-    const modalRoot = (
-        <ModalRoot activeModal={activeModal} onClose={closeModal}>
-            <NewsCreateEditModal
-                mode={editPostId ? 'edit' : 'create'}
-                postId={editPostId}
-                onClose={closeModal}
-                onSuccess={closeModal}
-            />
-        </ModalRoot>
-    );
-
     return (
         <>
-            {modalRoot}
-
             <PermissionGuard roles={[ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER]}>
                 <Div style={{ paddingBottom: 0 }}>
                     <Button
                         size="m"
                         mode="primary"
                         stretched
-                        onClick={handleCreateClick}
+                        onClick={onCreatePost}
                     >
                         {t('addPost')}
                     </Button>
@@ -98,29 +77,30 @@ export const NewsPanel: React.FC = () => {
             </PermissionGuard>
 
             {/* Category filter chips */}
-            <div className="newsCategoryFilter">
-                <button
-                    className={selectedCategoryId === null ? 'newsCategory' : 'newsStatusDraft'}
-                    onClick={() => setSelectedCategoryId(null)}
-                    style={{ border: 'none', cursor: 'pointer' }}
-                >
-                    {t('allCategories')}
-                </button>
-                {categories?.map((cat) => (
+            {categories && categories.length > 0 && (
+                <div className="newsCategoryFilter">
                     <button
-                        key={cat.id}
-                        className={selectedCategoryId === cat.id ? 'newsCategory' : 'newsStatusDraft'}
-                        onClick={() => setSelectedCategoryId(cat.id)}
-                        style={{ border: 'none', cursor: 'pointer' }}
+                        className={selectedCategoryId === null ? 'newsCategoryActive' : 'newsCategory'}
+                        onClick={() => setSelectedCategoryId(null)}
                     >
-                        {cat.name}
+                        {t('allCategories')}
                     </button>
-                ))}
-            </div>
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            className={selectedCategoryId === cat.id ? 'newsCategoryActive' : 'newsCategory'}
+                            onClick={() => setSelectedCategoryId(cat.id)}
+                        >
+                            {cat.name}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             <Div>
                 {isPostsLoading ? (
                     <>
+                        <NewsSkeletonCard />
                         <NewsSkeletonCard />
                         <NewsSkeletonCard />
                     </>
@@ -135,6 +115,7 @@ export const NewsPanel: React.FC = () => {
                             key={post.id}
                             post={post}
                             onClick={() => handleCardClick(post.id)}
+                            onEdit={onEditPost ? () => onEditPost(post.id) : undefined}
                         />
                     ))
                 )}
