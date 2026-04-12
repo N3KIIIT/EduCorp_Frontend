@@ -11,6 +11,7 @@ interface AppContextState {
     currentAttemptId: string | null;
     currentNewsPostId: string | null;
     currentPassId: string | null;
+    currentDepartmentId: string | null;
 }
 
 interface AppContextActions {
@@ -21,6 +22,7 @@ interface AppContextActions {
     setCurrentAttemptId: (id: string | null) => void;
     setCurrentNewsPostId: (id: string | null) => void;
     setCurrentPassId: (id: string | null) => void;
+    setCurrentDepartmentId: (id: string | null) => void;
     resetContext: () => void;
 }
 
@@ -36,6 +38,7 @@ export const useAppContextStore = create<AppContextStore>()(
             currentAttemptId: null,
             currentNewsPostId: null,
             currentPassId: null,
+            currentDepartmentId: null,
 
             setCurrentTenantId: (id) => set({ currentTenantId: id }),
             setCurrentCourseId: (id) => set({ currentCourseId: id }),
@@ -44,6 +47,7 @@ export const useAppContextStore = create<AppContextStore>()(
             setCurrentAttemptId: (id) => set({ currentAttemptId: id }),
             setCurrentNewsPostId: (id) => set({ currentNewsPostId: id }),
             setCurrentPassId: (id) => set({ currentPassId: id }),
+            setCurrentDepartmentId: (id) => set({ currentDepartmentId: id }),
 
             resetContext: () =>
                 set({
@@ -54,6 +58,7 @@ export const useAppContextStore = create<AppContextStore>()(
                     currentAttemptId: null,
                     currentNewsPostId: null,
                     currentPassId: null,
+                    currentDepartmentId: null,
                 }),
         }),
         { name: 'AppContextStore' }

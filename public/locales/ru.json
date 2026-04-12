@@ -625,6 +625,85 @@
         "sortUsageDesc": "По использованиям (убывание)",
         "sortUsageAsc": "По использованиям (возрастание)"
       }
+    },
+    "dashboard": {
+      "title": "Админ-панель",
+      "tenantsTab": "Тенанты",
+      "departmentsTab": "Отделы",
+      "assignmentsTab": "Назначения",
+      "assignCourse": "Назначить курс"
+    }
+  },
+  "departments": {
+    "create": "Создать отдел",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "employees": "сотрудников",
+    "empty": "Отделов пока нет",
+    "confirmDelete": "Удалить отдел {name}?",
+    "removeEmployeeConfirm": "Убрать сотрудника из отдела?",
+    "modal": {
+      "createTitle": "Новый отдел",
+      "editTitle": "Редактировать отдел",
+      "name": "Название",
+      "namePlaceholder": "Название отдела",
+      "description": "Описание",
+      "descriptionPlaceholder": "Описание отдела",
+      "managerId": "ID руководителя",
+      "managerIdPlaceholder": "UUID руководителя",
+      "save": "Сохранить",
+      "cancel": "Отмена"
+    },
+    "addEmployee": {
+      "title": "Добавить сотрудника",
+      "selectUser": "Выберите сотрудника",
+      "selectUserPlaceholder": "Выберите из списка",
+      "userId": "ID пользователя",
+      "userIdPlaceholder": "UUID пользователя",
+      "add": "Добавить",
+      "cancel": "Отмена"
+    },
+    "details": {
+      "title": "Отдел",
+      "notFound": "Отдел не найден",
+      "employeesTab": "Сотрудники",
+      "assignmentsTab": "Назначения",
+      "addEmployee": "Добавить",
+      "noEmployees": "Нет сотрудников",
+      "assignCourse": "Назначить курс"
+    }
+  },
+  "assignments": {
+    "empty": "Назначений нет",
+    "revokeConfirm": "Отозвать назначение?",
+    "revoke": "Отозвать",
+    "required": "Обязательный",
+    "deadline": "Срок",
+    "courseLabel": "Курс",
+    "status": {
+      "All": "Все",
+      "Pending": "Ожидает",
+      "InProgress": "В процессе",
+      "Completed": "Завершён",
+      "Overdue": "Просрочен",
+      "Revoked": "Отозван"
+    },
+    "modal": {
+      "title": "Назначить курс",
+      "targetType": "Назначить для",
+      "targetEmployee": "Сотрудника",
+      "targetDepartment": "Отдела",
+      "course": "Курс",
+      "coursePlaceholder": "Выберите курс",
+      "courseIdPlaceholder": "ID курса",
+      "assigneeId": "ID сотрудника",
+      "assigneeIdPlaceholder": "UUID сотрудника",
+      "departmentId": "ID отдела",
+      "departmentIdPlaceholder": "UUID отдела",
+      "deadline": "Срок выполнения",
+      "isRequired": "Обязательный",
+      "assign": "Назначить",
+      "cancel": "Отмена"
     }
   }
 }

@@ -9,6 +9,7 @@ import AuthGuard from '@/entities/session/lib/auth-guard';
 import { ROLES } from '@/shared/config/permissions';
 
 import { TenantDetailsPanel } from '@/features/admin/manage-tenants/ui/TenantDetailsPanel';
+import { DepartmentDetailsPanel } from '@/features/departments/ui/DepartmentDetailsPanel';
 
 export const AdminView: React.FC<NavIdProps> = ({ id }) => {
     const { activePanels } = useNavigationStore();
@@ -18,6 +19,7 @@ export const AdminView: React.FC<NavIdProps> = ({ id }) => {
             <View id={id} activePanel={activePanels[id as ViewId] || ADMIN_PANEL_IDS.MAIN}>
                 <AdminDashboard id={ADMIN_PANEL_IDS.MAIN} />
                 <TenantDetailsPanel id={ADMIN_PANEL_IDS.DETAILS} />
+                <DepartmentDetailsPanel id={ADMIN_PANEL_IDS.DEPARTMENT_DETAILS} />
             </View>
         </AuthGuard>
     );

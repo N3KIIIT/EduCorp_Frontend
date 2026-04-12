@@ -24,3 +24,13 @@ export const NEWS_MODAL_IDS = {
     CREATE: 'create-news-modal',
 }
 
+export const DEPARTMENT_MODAL_IDS = {
+    CREATE: 'create-department-modal',
+    EDIT: 'edit-department-modal',
+    ADD_EMPLOYEE: 'add-employee-modal',
+}
+
+export const ASSIGNMENT_MODAL_IDS = {
+    ASSIGN_COURSE: 'assign-course-modal',
+}
+

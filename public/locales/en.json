@@ -575,7 +575,6 @@
         "changeRole": "Assign Role",
         "addRole": "Add Role",
         "revoke": "Revoke",
-         
         "roles": {
           "User": "User",
           "Admin": "Admin",
@@ -622,6 +621,85 @@
         "sortUsageDesc": "Usage (High to Low)",
         "sortUsageAsc": "Usage (Low to High)"
       }
+    },
+    "dashboard": {
+      "title": "Admin panel",
+      "tenantsTab": "Tenants",
+      "departmentsTab": "Departments",
+      "assignmentsTab": "Assignments",
+      "assignCourse": "Assign course"
+    }
+  },
+  "departments": {
+    "create": "Create department",
+    "edit": "Edit",
+    "delete": "Delete",
+    "employees": "employees",
+    "empty": "No departments yet",
+    "confirmDelete": "Delete department {name}?",
+    "removeEmployeeConfirm": "Remove employee from department?",
+    "modal": {
+      "createTitle": "New department",
+      "editTitle": "Edit department",
+      "name": "Name",
+      "namePlaceholder": "Department name",
+      "description": "Description",
+      "descriptionPlaceholder": "Department description",
+      "managerId": "Manager ID",
+      "managerIdPlaceholder": "Manager UUID",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "addEmployee": {
+      "title": "Add employee",
+      "selectUser": "Select employee",
+      "selectUserPlaceholder": "Select from list",
+      "userId": "User ID",
+      "userIdPlaceholder": "User UUID",
+      "add": "Add",
+      "cancel": "Cancel"
+    },
+    "details": {
+      "title": "Department",
+      "notFound": "Department not found",
+      "employeesTab": "Employees",
+      "assignmentsTab": "Assignments",
+      "addEmployee": "Add",
+      "noEmployees": "No employees",
+      "assignCourse": "Assign course"
+    }
+  },
+  "assignments": {
+    "empty": "No assignments",
+    "revokeConfirm": "Revoke this assignment?",
+    "revoke": "Revoke",
+    "required": "Required",
+    "deadline": "Deadline",
+    "courseLabel": "Course",
+    "status": {
+      "All": "All",
+      "Pending": "Pending",
+      "InProgress": "In Progress",
+      "Completed": "Completed",
+      "Overdue": "Overdue",
+      "Revoked": "Revoked"
+    },
+    "modal": {
+      "title": "Assign course",
+      "targetType": "Assign to",
+      "targetEmployee": "Employee",
+      "targetDepartment": "Department",
+      "course": "Course",
+      "coursePlaceholder": "Select a course",
+      "courseIdPlaceholder": "Course ID",
+      "assigneeId": "Employee ID",
+      "assigneeIdPlaceholder": "Employee UUID",
+      "departmentId": "Department ID",
+      "departmentIdPlaceholder": "Department UUID",
+      "deadline": "Deadline",
+      "isRequired": "Required",
+      "assign": "Assign",
+      "cancel": "Cancel"
     }
   }
 }

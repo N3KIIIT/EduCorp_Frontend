@@ -45,6 +45,7 @@ export const ADMIN_PANEL_IDS = {
     LESSON_DETAILS: 'admin-lesson-details',
     TESTS: 'admin-tests',
     TEST_DETAILS: 'admin-test-details',
+    DEPARTMENT_DETAILS: 'admin-department-details',
 } as const;
 export type AdminPanelId = typeof ADMIN_PANEL_IDS[keyof typeof ADMIN_PANEL_IDS];
 
